@@ -1,5 +1,5 @@
 define([
-	'/../../finalYearProject/Public/thirdPartyLibs/backbone-min.js'
+	'backbone'
 ], function(backbone) {
 	console.log('here');
 });

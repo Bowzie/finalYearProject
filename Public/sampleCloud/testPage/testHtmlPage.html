@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <script data-main="testJsPage" src="/../finalYearProject\Public\thirdPartyLibs\require-min.js"></script>
+        <script src="/../finalYearProject\Public\thirdPartyLibs\require-min.js"></script> 
         <script>
-        require(['common'], function() {
-        	console.log('Running testJsPage');
-        	require(['testJsPage']);
+        require(['common'], function() { //Common first called to define require.config
+        	console.log('Running testJsPage'); 
+        	require(['sampleCloud/testPage/testJsPage']);	//testJsPage called next
         });
         </script>
     </head>
