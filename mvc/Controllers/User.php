@@ -1,5 +1,5 @@
 <?php
-include_once './Models/Model.php';
+include_once 'Controller.php';
 
 class User extends Controller 
 {
@@ -8,9 +8,9 @@ class User extends Controller
 
 	}
 
-	public function get($args)
+	public function GET($args)
 	{
-		return '405 Method Not Allowed'; //Call Model here instead
+		echo($args[0]); //returns value passed into it, for now will be id to get from user table
 	}
 }
 ?>

@@ -1,13 +1,12 @@
 <?php
 
-include_once 'mvc/MusicModel.php';
-include_once 'mvc/UserModel.php';
+include_once 'mvc/Controllers/User.php';
 
-$musicModel = new MusicModel;
-$userModel = new UserModel;
+$user = new User();
 
-$musicModel->getMusicInfo();
-$userModel->getUserInfo();
+echo 'here';
+
+$user->GET(array(1));
 
 
 ?>

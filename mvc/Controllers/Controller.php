@@ -1,5 +1,6 @@
 <?php
-include_once './Models/Model.php';
+
+include_once '/../Models/Model.php';
 
 class Controller 
 {
@@ -8,7 +9,7 @@ class Controller
 
 	}
 
-	public function get($args)
+	public function GET($args)
 	{
 		return '405 Method Not Allowed'; //Need to change to header?
 	}
