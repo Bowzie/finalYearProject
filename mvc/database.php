@@ -9,12 +9,12 @@ class Database extends PDO {
     function __construct() {
         try {
 
-            parent::__construct(Database::$dbType . ":host=" . Database::$dbHost . ";dbname=" . Database::$dbName, 'root', '');
+            parent::__construct(Database::$dbType . ':host=' . Database::$dbHost . ';dbname=' . Database::$dbName, 'root', '');
             $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         } catch (PDOException $e) {
 
-            throw new DatabaseException('Cannot access the Database');
+            echo $e->getMessage() . ' ERROR CODE: ' . $e->getCode();
 
         }	    	
 	}
