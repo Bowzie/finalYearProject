@@ -1,6 +1,6 @@
 <?php
 
-include_once 'database.php';  
+include_once './Model.php';  
 
 class UserModel extends Model
 {
