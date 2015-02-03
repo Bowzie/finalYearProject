@@ -1,11 +1,15 @@
+<!DOCTYPE html>
 <html>
-
     <head>
-        <script type="text/javascript" src="testJsPage.js"></script>
+        <script data-main="testJsPage" src="/../finalYearProject\Public\thirdPartyLibs\require-min.js"></script>
+        <script>
+        require(['common'], function() {
+        	console.log('Running testJsPage');
+        	require(['testJsPage']);
+        });
+        </script>
     </head>
-
     <body>
-    	<button onclick="getAudioFile()">Click Me</button>
+        <h1>Using Backbone</h1>
     </body>
-
 </html>
