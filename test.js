@@ -13,6 +13,6 @@ window.onload = function() {
 		response = JSON.parse(xmlHttpGet.responseText);
 		console.log(response);
 
-		document.getElementById('outputInfo').innerHTML = response.value;
+		document.getElementById('outputInfo').innerHTML = response.id + ' ' + response.userName;
 	}
 }

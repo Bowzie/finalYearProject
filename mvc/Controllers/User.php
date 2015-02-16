@@ -2,36 +2,36 @@
 include_once 'Controller.php';
 include_once '/../Models/UserModel.php';
 
-header('Content-type: application/json');
-header('X-Content-Type-Options: nosniff');
-if(isset($_POST)) {
-	$blah = array('value' => file_get_contents('php://input'));	
-}
-else {
-	$blah = array('value' => 'Feck');	
-}
 
-echo json_encode($blah);
 
 class User extends Controller 
 {
 	function __construct() //Empty Constructor
 	{
-
 	}
 
 	public function HandleRequest() {
+		//TODO switch other request methods (will probably only be delete used) and do switch in controller.php instead
+		switch($_SERVER['REQUEST_METHOD']) {
+			case 'POST': $this->POST(file_get_contents('php://input')); 
+			break;
+			default: echo 'crap';
+		}
 	}
 
 	//TODO create method to test request method from HTTP request and implement GET, PUT, DELETE etc.. 
-	public function GET($args)
+	public function POST($args)
 	{
+		header('Content-type: application/json');
+		header('X-Content-Type-Options: nosniff');
 		$userModel = new UserModel();
 		$userInfo = $userModel->getUserInfo($args[0]);
 
-        foreach($userInfo as $d => $val) {
-        	echo $d . ' : ' . $val .  "<br>";
-        }
+		echo json_encode($userInfo);
 	}
 }
+
+//TODO Remove code below and have HandleRequest() called in class instead
+$user = new User();
+$user->HandleRequest();
 ?>
