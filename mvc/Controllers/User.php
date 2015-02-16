@@ -2,6 +2,10 @@
 include_once 'Controller.php';
 include_once '/../Models/UserModel.php';
 
+header('Content-type: application/json');
+$blah = array('value1' => 1);
+echo json_encode($blah);
+
 class User extends Controller 
 {
 	function __construct() //Empty Constructor
@@ -10,7 +14,6 @@ class User extends Controller
 	}
 
 	public function HandleRequest() {
-		echo REQUEST_METHOD;
 	}
 
 	//TODO create method to test request method from HTTP request and implement GET, PUT, DELETE etc.. 
