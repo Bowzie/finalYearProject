@@ -10,7 +10,7 @@ class Model
 		
 	}
 	
-	protected static function executeSelectQuery($table, $queryParams) 
+	protected static function executeSelectQuery($id, $table, $queryParams) 
 	{
 		$db = new Database;
 		
@@ -18,6 +18,7 @@ class Model
         //TODO get only specific music info
         $query .= $queryParams;
         $query .= ' FROM ' . '`' . $db->getDbName() . '`.`' . $table . '` ';
+     	$query .= 'WHERE id =' . $id;
 		$statement = $db->prepare($query);
 
 		return Model::executeQuery($db, $statement);
@@ -27,9 +28,9 @@ class Model
 	 	$statement->execute();
 
         $data = $statement->fetch(PDO::FETCH_ASSOC);
-        foreach($data as $d => $val) {
-        	echo $d . ' : ' . $val .  "<br>";
-        }
+        // foreach($data as $d => $val) {
+        // 	echo $d . ' : ' . $val .  "<br>";
+        // }
         return ($data) ? $data : null;
 	}
 
