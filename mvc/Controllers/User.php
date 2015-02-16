@@ -3,7 +3,14 @@ include_once 'Controller.php';
 include_once '/../Models/UserModel.php';
 
 header('Content-type: application/json');
-$blah = array('value1' => 1);
+header('X-Content-Type-Options: nosniff');
+if(isset($_POST)) {
+	$blah = array('value' => file_get_contents('php://input'));	
+}
+else {
+	$blah = array('value' => 'Feck');	
+}
+
 echo json_encode($blah);
 
 class User extends Controller 

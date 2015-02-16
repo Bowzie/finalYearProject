@@ -4,12 +4,15 @@ window.onload = function() {
 	console.log(userDiv);
 
 	var xmlHttpGet = new XMLHttpRequest();
-	var userId = JSON.stringify({userId: 1});
-	xmlHttpGet.open("GET", 'mvc/Controllers/User.php', true);
+	var userId = 1;
+	xmlHttpGet.open("POST", 'mvc/Controllers/User.php', true);
 	xmlHttpGet.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 	xmlHttpGet.send(userId);
 
 	xmlHttpGet.onload = function() {
-		document.getElementById('outputInfo').innerHTML = xmlHttpGet.responseText;
+		response = JSON.parse(xmlHttpGet.responseText);
+		console.log(response);
+
+		document.getElementById('outputInfo').innerHTML = response.value;
 	}
 }
