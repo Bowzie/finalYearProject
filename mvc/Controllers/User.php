@@ -9,6 +9,10 @@ class User extends Controller
 
 	}
 
+	public function HandleRequest() {
+		echo REQUEST_METHOD;
+	}
+
 	//TODO create method to test request method from HTTP request and implement GET, PUT, DELETE etc.. 
 	public function GET($args)
 	{
