@@ -2,8 +2,6 @@
 include_once 'Controller.php';
 include_once '/../Models/UserModel.php';
 
-
-
 class User extends Controller 
 {
 	function __construct() //Empty Constructor
