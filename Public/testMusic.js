@@ -75,7 +75,7 @@ window.onload = function() {
 	        var input = e.inputBuffer.getChannelData(0);
 	        var output = e.outputBuffer.getChannelData(0);
 	        for (var i = 0; i < bufferSize; i++) {
-	            output[i] = (input[i] + lastOut) / 2.0;
+	            output[i] = (input[i] + lastOut);
 	            lastOut = output[i];
 	        }
 	    }
