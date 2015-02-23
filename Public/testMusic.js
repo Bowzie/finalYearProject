@@ -8,56 +8,78 @@ window.onload = function() {
 	} catch(e) {
 	  alert('Web Audio API is not supported in this browser');
 	}
-	
-	source = audioContext.createBufferSource();
+	var sound = audioContext.createBufferSource();
+	sound.isLoaded = false;
 	getData();
-	//playData(source);
-	var lowPassNode = lowPassFilter(source);
-	console.log(lowPassNode);
-	playData(lowPassNode);
+	var lowPassNode = lowPassFilter(sound);
+
+	var button = document.getElementById('playButton');
+	button.addEventListener('click', function() {
+		playData(sound);
+	});
+
+	var lowPassbutton = document.getElementById('playLowPassButton');
+	lowPassbutton.addEventListener('click', function() {
+		playScriptNodeData(sound, lowPassNode);
+	});
+
 
 	function getData() {
 		//Get audio track from file and get as an arraybuffer
 		var xmlHttpGet = new XMLHttpRequest();
-		xmlHttpGet.open("GET", '/../finalYearProject/music/track1.wav', true); 
+		xmlHttpGet.open("GET", '/../finalYearProject/music/track2.wav', true); 
 		xmlHttpGet.responseType = "arraybuffer"; //arraybuffer = raw binary data
 
 		xmlHttpGet.onload = function() {
 			var data = xmlHttpGet.response;
 			audioContext.decodeAudioData(xmlHttpGet.response, function(buffer){
-				source.buffer = buffer;
+				sound.buffer = buffer;
+				console.log(buffer);
+				sound.isLoaded = true;
 			},
 			function(e){"Error with decoding audio data" + e.err});
 		}
-
 		xmlHttpGet.send();
 	}
 
 	//creates buffer from data response from server and plays file
-	function playData() {
-		source.connect(lowPassNode);
-		lowPassNode.connect(audioContext.destination);
-		source.start(0); //plays the contents of the wav
+	function playData(sound) {
+		console.log(sound.buffer.getChannelData(3));
+		if(sound.isLoaded === true) {
+			var newSource = audioContext.createBufferSource();
+			newSource.buffer = sound.buffer;
+			newSource.connect(audioContext.destination);
+			newSource.start(0); //plays the contents of the wav
+		} else {
+			console.log("sound not loaded!");
+		}
+	}
+
+	function playScriptNodeData(sound, scriptNode) {
+		console.log(scriptNode);
+		if(sound.isLoaded === true) {
+			var newSource = audioContext.createBufferSource();
+			newSource.buffer = sound.buffer;
+			newSource.connect(scriptNode);
+			scriptNode.connect(audioContext.destination);
+			newSource.start(0); //plays the contents of the wav
+		}
 	}
 	
 
-	function lowPassFilter(data) {
-		var track = data;
-		var lastOutput = 0.0;
-		var scriptNode;
-		scriptNode = audioContext.createScriptProcessor(4096, 1, 1);
-
-		scriptNode.onaudioprocess = function(e) {
+	function lowPassFilter(sound) {
+		var bufferSize = 4096;
+	 	var lastOut = 0.0;
+	    var node = audioContext.createScriptProcessor(bufferSize, 1, 1);
+	    node.onaudioprocess = function(e) {
 	        var input = e.inputBuffer.getChannelData(0);
 	        var output = e.outputBuffer.getChannelData(0);
-	        for (var i = 0; i < 4096; i++) {
-	            output[i] = (input[i] + lastOutput) / 2.0;
-	            lastOutput = output[i];
+	        for (var i = 0; i < bufferSize; i++) {
+	            output[i] = (input[i] + lastOut) / 2.0;
+	            lastOut = output[i];
 	        }
-	        console.log(output);
-		}
-
-		return scriptNode;
+	    }
+	    return node;
 	}
 };
 
