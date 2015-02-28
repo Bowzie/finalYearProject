@@ -27,24 +27,23 @@ window.onload = function() {
 	function getData() {
 		//Get audio track from file and get as an arraybuffer
 		var xmlHttpGet = new XMLHttpRequest();
-		xmlHttpGet.open("GET", '/../finalYearProject/music/track2.wav', true); 
+		xmlHttpGet.open("GET", '/../finalYearProject/music/track1.wav', true); 
 		xmlHttpGet.responseType = "arraybuffer"; //arraybuffer = raw binary data
 
 		xmlHttpGet.onload = function() {
 			var data = xmlHttpGet.response;
 			audioContext.decodeAudioData(xmlHttpGet.response, function(buffer){
 				sound.buffer = buffer;
-				console.log(buffer);
 				sound.isLoaded = true;
 			},
 			function(e){"Error with decoding audio data" + e.err});
+			
 		}
 		xmlHttpGet.send();
 	}
 
 	//creates buffer from data response from server and plays file
 	function playData(sound) {
-		console.log(sound.buffer.getChannelData(3));
 		if(sound.isLoaded === true) {
 			var newSource = audioContext.createBufferSource();
 			newSource.buffer = sound.buffer;
@@ -57,13 +56,11 @@ window.onload = function() {
 
 	function playScriptNodeData(sound, scriptNode) {
 		console.log(scriptNode);
-		if(sound.isLoaded === true) {
-			var newSource = audioContext.createBufferSource();
-			newSource.buffer = sound.buffer;
-			newSource.connect(scriptNode);
-			scriptNode.connect(audioContext.destination);
-			newSource.start(0); //plays the contents of the wav
-		}
+		var newSource = audioContext.createBufferSource();
+		newSource.buffer = sound.buffer;
+		newSource.connect(scriptNode);
+		scriptNode.connect(audioContext.destination);
+		newSource.start(0); //plays the contents of the wav
 	}
 	
 
@@ -75,9 +72,10 @@ window.onload = function() {
 	        var input = e.inputBuffer.getChannelData(0);
 	        var output = e.outputBuffer.getChannelData(0);
 	        for (var i = 0; i < bufferSize; i++) {
-	            output[i] = (input[i] + lastOut);
+	            output[i] = (input[i] + lastOut) / 2;
 	            lastOut = output[i];
 	        }
+	        console.log(output);
 	    }
 	    return node;
 	}
