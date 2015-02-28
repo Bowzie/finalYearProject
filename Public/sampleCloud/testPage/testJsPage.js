@@ -4,7 +4,7 @@ define([
 ], function(backbone, dsp) {
 	//Initial code will be basic, and won't run until php controller branch is merged to master
 	User = Backbone.Model.extend({
-		urlRoot: '/../finalyearproject/mvc/Controllers/User.php', //call php controller
+		urlRoot: '/../mvc/Controllers/User.php', //call php controller
 		userId: '1'
 	});
 
