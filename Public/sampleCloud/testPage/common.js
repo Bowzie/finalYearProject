@@ -3,6 +3,7 @@ require.config({
     paths: {    //Commonly used scripts
         jquery: 'thirdPartyLibs/jquery-min',
         underscore: 'thirdPartyLibs/underscore-min',
-        backbone: 'thirdPartyLibs/backbone-min'
+        backbone: 'thirdPartyLibs/backbone-min',
+        dspFunctions: 'sampleCloud/libs/dspFunctions'
     }
 });

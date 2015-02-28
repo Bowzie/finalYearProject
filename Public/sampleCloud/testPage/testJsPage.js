@@ -1,12 +1,11 @@
 define([
-	'backbone'
-], function(backbone) {
+	'backbone',
+	'dspFunctions'
+], function(backbone, dsp) {
 	//Initial code will be basic, and won't run until php controller branch is merged to master
 	User = Backbone.Model.extend({
-		urlRoot: '', //call php controller, will currently cause: Uncaught Error: A "url" property or function must be specified
-		defaults: {
-			id: ''
-		}
+		urlRoot: '/../finalyearproject/mvc/Controllers/User.php', //call php controller
+		userId: '1'
 	});
 
 	var user = new User();
@@ -14,10 +13,11 @@ define([
 	var userDetails = {
 		id: 1,
 	};
-
+	
 	//POST to PHP Controller class and alert return data
-	user.save(userDetails, {
+	user.fetch(userDetails, {
 		success: function(user) {
+			console.log("bleyh");
 			alert(user.toJSON());
 		}
 	});
