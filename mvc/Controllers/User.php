@@ -11,7 +11,7 @@ class User extends Controller
 	public function HandleRequest() {
 		//TODO switch other request methods (will probably only be delete used) and do switch in controller.php instead
 		switch($_SERVER['REQUEST_METHOD']) {
-			case 'POST': $this->POST(file_get_contents('php://input')); 
+			case 'POST': $this->POST(json_decode(file_get_contents('php://input'), true)); 
 			break;
 			default: echo 'crap';
 		}
@@ -23,7 +23,7 @@ class User extends Controller
 		header('Content-type: application/json');
 		header('X-Content-Type-Options: nosniff');
 		$userModel = new UserModel();
-		$userInfo = $userModel->getUserInfo($args[0]);
+		$userInfo = $userModel->getUserInfo($args['id']);
 
 		echo json_encode($userInfo);
 	}
