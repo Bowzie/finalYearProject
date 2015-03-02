@@ -5,6 +5,16 @@ window.onload = function() {
 }
 
 function handleFileSelect(evt) {
+	var audioContext = new AudioContext();
 	var file = evt.target.files;
-	console.log("here" + file);
+	console.log(file[0]);
+	var fileReader = new FileReader()
+	var fileToArrayBuffer = fileReader.readAsArrayBuffer(file[0]);
+	fileReader.onload = function() {
+		var arrayBuffer = fileReader.result;
+		audioContext.decodeAudioData(fileReader.result, function(buffer){
+			console.log(buffer);
+		});
+	}
+	
 } 
