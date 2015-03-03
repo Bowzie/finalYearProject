@@ -1,7 +1,9 @@
 window.onload = function() {
 	var fileChooser = document.getElementById('fileChooser');
- 	console.log(fileChooser);
+	var fileDropArea = document.getElementById('drop');
  	fileChooser.addEventListener('change', handleFileSelect, false);	
+ 	fileDropArea.addEventListener('drop', handleFileSelect, false);	
+
 }
 
 function handleFileSelect(evt) {
