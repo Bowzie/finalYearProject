@@ -1,16 +1,34 @@
 window.onload = function() {
 	var fileChooser = document.getElementById('fileChooser');
 	var fileDropArea = document.getElementById('drop');
- 	fileChooser.addEventListener('change', handleFileSelect, false);	
+ 	fileChooser.addEventListener('change', handleFileSelectFromFileChoose, false);	
  	fileDropArea.addEventListener('dragover', handleDragOver, false);
- 	fileDropArea.addEventListener('drop', handleFileSelect, false);	
+ 	fileDropArea.addEventListener('drop', handleFileSelectFromFileDrop, false);	
 
 }
 
-function handleFileSelect(evt) {
-	var audioContext = new AudioContext();
+function handleFileSelectFromFileChoose(evt) {	
 	var file = evt.target.files;
-	console.log(file[0]);
+	fileReadToBuff(file);
+} 
+
+function handleFileSelectFromFileDrop(evt) {
+	evt.stopPropagation();
+	evt.preventDefault();
+
+	var file = evt.dataTransfer.files;
+	fileReadToBuff(file);
+}
+
+function handleDragOver(evt) {
+	evt.stopPropagation();
+	evt.preventDefault();
+	evt.dataTransfer.dropEffect = 'copy';
+}
+
+function fileReadToBuff(file) {
+	var audioContext = new AudioContext();
+	console.log(file);
 	var fileReader = new FileReader()
 	var fileToArrayBuffer = fileReader.readAsArrayBuffer(file[0]);
 	fileReader.onload = function() {
@@ -19,8 +37,4 @@ function handleFileSelect(evt) {
 			console.log(buffer);
 		});
 	}
-} 
-
-function handleDragOver(evt) {
-	evt.dataTransfer.dropEffect = 'copy';
 }
