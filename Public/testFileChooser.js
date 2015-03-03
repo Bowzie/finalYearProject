@@ -2,6 +2,7 @@ window.onload = function() {
 	var fileChooser = document.getElementById('fileChooser');
 	var fileDropArea = document.getElementById('drop');
  	fileChooser.addEventListener('change', handleFileSelect, false);	
+ 	fileDropArea.addEventListener('dragover', handleDragOver, false);
  	fileDropArea.addEventListener('drop', handleFileSelect, false);	
 
 }
@@ -18,5 +19,8 @@ function handleFileSelect(evt) {
 			console.log(buffer);
 		});
 	}
-	
 } 
+
+function handleDragOver(evt) {
+	evt.dataTransfer.dropEffect = 'copy';
+}
