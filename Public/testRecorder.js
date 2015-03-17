@@ -65,12 +65,14 @@ function stopRecord(evt)
 	
 	if(isRecording === true) 
 	{
-		console.log("Stopping record and saving to buffer");
+		console.log('Stopping record and saving to buffer');
         audioBuffer = audioContext.createBuffer( 1, recording.length, audioContext.sampleRate);
         audioBuffer.getChannelData(0).set(recording, 0);
+        //Clear recording 
+        recording = null;
 	}
 	else {
-		console.log("Not currently recording!");
+		console.log('Not currently recording!');
 	}
 
 	isRecording = false;
@@ -81,14 +83,11 @@ function setupAudio(stream)
 {
 	//Create nodes
 	sourceNode = audioContext.createMediaStreamSource(stream);
-	console.log(audioContext);
 	javascriptNode = audioContext.createScriptProcessor(16384, 1, 1);
-	console.log(javascriptNode);
 
 	//Connect nodes together and to output(speakers)
 	sourceNode.connect(javascriptNode);
 	javascriptNode.connect(audioContext.destination);
-
 }
 
 function addToRecordingBuffer(inputBuffer) 
@@ -96,7 +95,6 @@ function addToRecordingBuffer(inputBuffer)
 	if(recording === null)
 	{
 		recording = inputBuffer.getChannelData(0);
-		console.log(recording);
 	}
 	else
 	{
@@ -108,20 +106,17 @@ function addToRecordingBuffer(inputBuffer)
 		tempBuffer.set(inputBuffer.getChannelData(0), recording.length);
 		//Set tempBuffer to global recording
 		recording = tempBuffer;
-		console.log(recording);
 	}
 }
 
 function playRecording() {
-	console.log(recording);
-	if(recording != null) 
+	if(audioBuffer != null) 
 	{
 		var newSource = audioContext.createBufferSource();
 		newSource.buffer = audioBuffer;
 		newSource.connect(audioContext.destination);
 		newSource.start(0); //plays the contents of the wav
 	}
-
 }
 
 function onError(e) {
