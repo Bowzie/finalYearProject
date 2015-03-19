@@ -1,10 +1,11 @@
-//TODO get rid off globals
+//TODO get rid of globals
 var isRecording = false;
 var audioContext;
 var sourceNode;
 var javascriptNode;
 var recording = null;
 var audioBuffer;
+var modifiedAudioBuffer;
 
 //getMedia function set for different browsers
 navigator.getMedia = ( navigator.mozGetUserMedia ||
@@ -52,6 +53,7 @@ function startRecord(evt)
 		console.log("Starting record");
 
 	    javascriptNode.onaudioprocess = function (e) {
+	    	e.inputBuffer.getChannelData(0).set(dspBitCrusher(e.inputBuffer.getChannelData(0), 0));
 	    	addToRecordingBuffer(e.inputBuffer); 
 	    }		
 	}
@@ -68,6 +70,7 @@ function stopRecord(evt)
 		console.log('Stopping record and saving to buffer');
         audioBuffer = audioContext.createBuffer( 1, recording.length, audioContext.sampleRate);
         audioBuffer.getChannelData(0).set(recording, 0);
+        console.log(recording);
         //Clear recording 
         recording = null;
 	}
@@ -110,6 +113,7 @@ function addToRecordingBuffer(inputBuffer)
 }
 
 function playRecording() {
+	console.log(audioBuffer);
 	if(audioBuffer != null) 
 	{
 		var newSource = audioContext.createBufferSource();
@@ -121,4 +125,23 @@ function playRecording() {
 
 function onError(e) {
     console.log('Error: ' + e);
+}
+
+function dspBitCrusher(bufferChannelData) {
+	var input = bufferChannelData;
+	var output = [];
+    var bits = 4;
+    var normfreq = 0.1; 
+    var step = Math.pow(1/2, bits);
+    var phaser = 0;
+    var last = 0;
+    for (var i = 0; i < 16384; i++) {
+        phaser += normfreq;
+        if (phaser >= 1.0) {
+            phaser -= 1.0;
+            last = step * Math.floor(input[i] / step + 0.5);
+        }
+        output[i] = last;
+    }
+    return output;
 }
