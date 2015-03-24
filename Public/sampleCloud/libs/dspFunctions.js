@@ -1,26 +1,33 @@
-function lowPassFilter(sound) {
-    var audioContext;
+var dsp = {};
 
-    //Determine if browser used supports web audio api
-    try {
-      window.AudioContext = window.AudioContext || window.webkitAudioContext;
-      audioContext = new AudioContext();
-    } catch(e) {
-      alert('Web Audio API is not supported in this browser');
-    }
-
-	var bufferSize = 4096;
+dsp.LowPassFilter = function(inputBufferChannelData) {
  	var lastOut = 0.0;
-    //TODO don't use node, alter sound passed in and return 
-    //node will only modify buffer when played, not useful
-    var node = audioContext.createScriptProcessor(bufferSize, 1, 1);
-    node.onaudioprocess = function(e) {
-        var input = e.inputBuffer.getChannelData(0);
-        var output = e.outputBuffer.getChannelData(0);
-        for (var i = 0; i < bufferSize; i++) {
-            output[i] = (input[i] + lastOut) / 2;
-            lastOut = output[i];
-        }
+
+    var input = inputBufferChannelData; //Single channel only currently
+    var output = [];
+    for (var i = 0; i < input.length; i++) {
+        output[i] = (input[i] + lastOut) / 2;
+        lastOut = output[i];
     }
-    return node;
+    return output;
+}
+
+dsp.dspBitCrusher = function(inputBufferChannelData) {
+    var input = inputBufferChannelData; //Single channel only currently
+    var output = [];
+    var bits = 4;
+    var normfreq = 0.1; 
+    var step = Math.pow(1/2, bits);
+    var phaser = 0;
+    var last = 0;
+    for (var i = 0; i < input.length; i++) {
+        phaser += normfreq;
+        if (phaser >= 1.0) {
+            phaser -= 1.0;
+            last = step * Math.floor(input[i] / step + 0.5);
+        }
+        output[i] = last;
+        
+    }
+    return output;
 }
