@@ -4,6 +4,6 @@ require.config({
         jquery: 'thirdPartyLibs/jquery-min',
         underscore: 'thirdPartyLibs/underscore-min',
         backbone: 'thirdPartyLibs/backbone-min',
-        dspFunctions: 'sampleCloud/libs/dspFunctions'
+        dspFunctions: 'sampleCloud/libs/dsp/dspFunctions'
     }
 });
