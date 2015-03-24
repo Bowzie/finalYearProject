@@ -16,8 +16,8 @@ define([
         .interpolate('linear');   
 
     var svg = chart.append('svg')
-        .attr('width', '400')
-        .attr('height', '400');
+        .attr('preserveAspectRatio', 'xMinYMin meet')
+        .attr('viewBox', '0 0 1920 1080');
 
     var graph = svg.append('path')
         .attr('d', line(data))
