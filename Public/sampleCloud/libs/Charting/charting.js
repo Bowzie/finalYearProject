@@ -3,33 +3,29 @@ define([
 ], function(d3) {
     var charting = {};
 
+    //Draw basic line chart
     charting.lineChart = function(id, data)
     {
-        var chart = d3.select('#chart');
-        var data = []; //dummy data to draw
+        var chart = d3.select('#'+id); //Get div with id = chart
 
-        for(var i = 0; i < 10; i++) {
-            data[i] = {'x':Math.floor((Math.random() * 400) + 1), 'y': Math.floor((Math.random() * 400) + 1)};
-        }
-
+        //Create line function
         var line = d3.svg.line()
-            .x(function(d){ return d.x; })
-            .y(function(d){ return d.y; })
-            .interpolate('linear');   
+            .x(function(d){ return d.x; }) //x coordinates
+            .y(function(d){ return d.y; }) //y coordinates
+            .interpolate('linear');   //Straight line between points
 
+        //Add svg to line, make responsive
         var svg = chart.append('svg')
             .attr('preserveAspectRatio', 'xMinYMin meet')
             .attr('viewBox', '0 0 1920 1080');
 
+        //Add graph to svg using line function
         var graph = svg.append('path')
-            .attr('d', line(data))
-            .attr('stroke', 'black')
-            .attr('stroke-width', 2)
+            .attr('d', line(data)) //draw line with data values
+            .attr('stroke', 'black') 
+            .attr('stroke-width', 2) 
             .attr('fill', 'none');
-
-        console.log(chart);   
+ 
         return chart;     
     }
-
-    
 });
