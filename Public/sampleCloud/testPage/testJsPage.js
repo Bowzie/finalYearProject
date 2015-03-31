@@ -32,6 +32,7 @@ define([
 		userButton.addEventListener('click', function() {
 			User = Backbone.Model.extend({
 				urlRoot: '/../finalYearProject/mvc/Controllers/User.php', //call php controller
+			});
 		});
 
 		var user = new User();
