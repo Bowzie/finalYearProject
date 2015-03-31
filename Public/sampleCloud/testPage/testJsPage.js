@@ -1,10 +1,9 @@
 define([
 	'backbone',
 	'dspFunctions',
-	'd3',
 	'charting',
 	'fileSelection'
-], function(backbone, dspFunctions, d3, charting, fileSelection) {
+], function(backbone, dspFunctions, charting, fileSelection) {
 
 		var audioContext;
 
@@ -15,7 +14,10 @@ define([
 		} catch(e) {
 	  	alert('Web Audio API is not supported in this browser');
 		}
-
+		console.log("hello");
+		var chart = new charting();
+		var theChart = chart.lineChart('chart', [1,2,3,4,5,6,7, 1,2,3,4,5,6,7, 1,2,3,4,5,6,7, 1,2,3,4,5,6,7, 1,2,3,4,5,6,7, 1,2,3,4,5,6,7]);
+		console.log(theChart);
 		var fileSelection = new fileSelection();
 
 		//Set divs to variables
@@ -27,29 +29,26 @@ define([
 	 	fileDropArea.addEventListener('dragover', fileSelection.handleDragOver, false); //fileDropArea drag over event
 	 	fileDropArea.addEventListener('drop', fileSelection.handleFileSelectFromFileDrop, false); //fileDropArea file drop event		
 
-		var userButton = document.getElementById('user');
+		// var userButton = document.getElementById('user');
 
-		userButton.addEventListener('click', function() {
-			User = Backbone.Model.extend({
-				urlRoot: '/../finalYearProject/mvc/Controllers/User.php', //call php controller
-			});
-		});
+		// userButton.addEventListener('click', function() {
+		// 	User = Backbone.Model.extend({
+		// 		urlRoot: '/../finalYearProject/mvc/Controllers/User.php', //call php controller
+		// 	});
+		// });
 
-		var user = new User();
+		// var userDetails = {
+		// 	id: 1
+		// };
 
-		var userDetails = {
-			id: 1
-		};
+		// console.log(userDetails);
 
-		console.log(userDetails);
-
-		//POST to PHP Controller class and alert return data
-		user.save(userDetails, {
-			type: 'POST',
-			success: function(user) {
-				console.log(user);
-			},
-			wait: true
-		});
-	});
+		// //POST to PHP Controller class and alert return data
+		// user.save(userDetails, {
+		// 	type: 'POST',
+		// 	success: function(user) {
+		// 		console.log(user);
+		// 	},
+		// 	wait: true
+		// });
 });
