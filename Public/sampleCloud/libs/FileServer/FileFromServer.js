@@ -18,7 +18,7 @@ fileFromServer.init = function(trackPath) {
 	}
 }
 
-fileFromServer.GetUserData = function(trackPath) {
+fileFromServer.GetFile = function(trackPath) {
 	//Get audio track from file and Get as an arraybuffer
 	var xmlHttpGet = new XMLHttpRequest();
 	xmlHttpGet.open("Get", '/../finalYearProject/music/'+trackPath, true); 

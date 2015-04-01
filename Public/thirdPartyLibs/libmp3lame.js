@@ -5336,7 +5336,7 @@ run();
 // {{POST_RUN_ADDITIONS}}
 // {{MODULE_ADDITIONS}}
 // libmp3lame function wrappers
-var BUFSIZE = 8192;
+// var BUFSIZE = 609068; 
 return {
   STEREO: 0, 
   JOINT_STEREO: 1, 
@@ -5356,7 +5356,7 @@ return {
   get_out_samplerate: Module.cwrap('lame_get_out_samplerate', 'number', [ 'number' ]),
   set_bitrate: Module.cwrap('lame_set_brate', 'number', [ 'number', 'number' ]),
   get_bitrate: Module.cwrap('lame_get_brate', 'number', [ 'number' ]),
-  encode_buffer_ieee_float: function(handle, channel_l, channel_r) {
+  encode_buffer_ieee_float: function(handle, channel_l, channel_r, BUFSIZE) {
     var outbuf = _malloc(BUFSIZE);
     var inbuf_l = _malloc(channel_l.length * 4);
     var inbuf_r = _malloc(channel_r.length * 4);
@@ -5367,7 +5367,6 @@ return {
       setValue(inbuf_r + (i*4), channel_r[i], 'float');
     }
     var nread = Module.ccall('lame_encode_buffer_ieee_float', 'number', [ 'number', 'number', 'number', 'number', 'number', 'number' ], [ handle, inbuf_l, inbuf_r, channel_l.length, outbuf, BUFSIZE ]);
-    console.log(nread);
     var arraybuf = new ArrayBuffer(nread);
     var retdata = new Uint8Array(arraybuf);
     retdata.set(HEAPU8.subarray(outbuf, outbuf + nread));
