@@ -240,7 +240,7 @@ var WavEncoder = (function(){
   };
 
   WavEncoder.defaults = {
-    numChannels: 1,      // mono
+    numChannels: 2,      // mono
     sampleRateHz: 22050, // 22050 Hz
     bytesPerSample: 2,   // 16 bit
     clip: true
