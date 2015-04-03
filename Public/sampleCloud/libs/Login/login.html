@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html>
  <head>
- <script type="text/javascript" src="loginTest.js"></script>
+ <script src="/../finalYearProject\Public\thirdPartyLibs\require-min.js"></script> 
+ <script>
+    require(['common'], function() { //Common first called to define require.config
+    	require(['sampleCloud/libs/Login/loginTest']);	//testEncode called next
+    });
+    </script>
  </head>
  <body>
-	<form id="form_id" method="post" name="myform">
+
 		<label>User Name :</label><br>
 		<input type="text" name="username" id="username"/>
 		<br>
@@ -12,6 +17,6 @@
 		<input type="password" name="password" id="password"/>
 		<br>
 		<button id="login">Login</button>
-	</form>
+
  </body>
  </html>

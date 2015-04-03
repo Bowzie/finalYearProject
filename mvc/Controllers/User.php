@@ -11,25 +11,39 @@ class User extends Controller
 	public function HandleRequest() {
 		//TODO switch other request methods (will probably only be delete used) and do switch in controller.php instead
 		switch($_SERVER['REQUEST_METHOD']) {
-			case 'POST': $this->POST(json_decode(file_get_contents('php://input'), true)); 
+			case 'POST': 
+				$this->POST( json_decode(file_get_contents('php://input'), true)); 
 			break;
-			default: echo 'crap';
 		}
 	}
 
 	//TODO create method to test request method from HTTP request and implement GET, PUT, DELETE etc.. 
 	public function POST($args)
 	{
-		header('Content-type: application/json');
-		header('X-Content-Type-Options: nosniff');
-		$userModel = new UserModel();
-		$userInfo = $userModel->getUserInfo($args['id']);
+		if($args['functionName'] === 'login')
+		{
+			header('Content-type: application/json');
+			header('X-Content-Type-Options: nosniff');
 
-		echo json_encode($userInfo);
+			$userModel = new UserModel();
+			$login = $userModel->checkLogin($args);
+
+			if($login === 'Successful')
+			{
+				$result = $userModel->getUserInfo($args['username']);
+				var_dump($result);
+				echo json_encode($result);
+			}	
+			else
+			{
+				$result['Result'] = 'Failure';
+				echo json_encode($result);
+			}
+		}
 	}
 }
 
-//TODO Remove code below and have HandleRequest() called in class instead
 $user = new User();
 $user->HandleRequest();
+
 ?>
