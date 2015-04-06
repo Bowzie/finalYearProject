@@ -6,6 +6,7 @@ class User extends Controller
 {
 	function __construct() //Empty Constructor
 	{
+
 	}
 
 	public function HandleRequest() {
@@ -18,28 +19,83 @@ class User extends Controller
 	}
 
 	//TODO create method to test request method from HTTP request and implement GET, PUT, DELETE etc.. 
-	public function POST($args)
+	private function POST($args)
 	{
-		if($args['functionName'] === 'login')
+		switch($args['functionName'])
 		{
-			header('Content-type: application/json');
-			header('X-Content-Type-Options: nosniff');
-
-			$userModel = new UserModel();
-			$login = $userModel->checkLogin($args);
-
-			if($login === 'Successful')
-			{
-				$result = $userModel->getUserInfo($args['username']);
-				var_dump($result);
-				echo json_encode($result);
-			}	
-			else
-			{
-				$result['Result'] = 'Failure';
-				echo json_encode($result);
-			}
+			case 'login': $this->login($args);
+			break;
+			case 'checkUsername': $this->checkUsername($args);
+			break;
+			case 'addUser': $this->addUser($args);
+			break;
 		}
+	}
+
+	private function login($args)
+	{
+		header('Content-type: application/json');
+		header('X-Content-Type-Options: nosniff');
+
+		$userModel = new UserModel();
+		$login = $userModel->checkLogin($args);
+
+		if($login === 'Successful')
+		{
+			$result = $userModel->getUserInfo($args['username']);
+			$result['result'] = 'Successful';
+			echo json_encode($result);
+		}	
+		else
+		{
+			$result['result'] = 'Failure';
+			echo json_encode($result);
+		}		
+	}
+
+	private function checkUsername($args)
+	{
+		header('Content-type: application/json');
+		header('X-Content-Type-Options: nosniff');
+
+		$userModel = new UserModel();
+		$username = $userModel->checkUsername($args['username']);
+
+		if($username === null)
+		{
+			$result['result'] = false;
+			echo json_encode($result);
+		}
+		else
+		{
+			$result['result'] = true;
+			echo json_encode($result);
+		}
+	}
+
+	private function addUser($args)
+	{
+		$userModel = new UserModel();
+		$newUser = $userModel->addUser($args);
+
+		if($newUser === true)
+		{
+			$newDir = '../../music/user-'.$args['username'];
+
+			mkdir($newDir, 0777, false);
+			// $files1 = scandir('../../music');
+			// var_dump($files1);
+		}
+		$result['result'] = $newUser;
+		
+		echo json_encode($result);
+	}
+
+	private removeUser($args)
+	{
+		//remove all user's music first
+		//remove entry from user table 
+		//rmdir their folder on
 	}
 }
 

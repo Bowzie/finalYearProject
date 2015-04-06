@@ -25,9 +25,26 @@ class UserModel extends Model
 
 	public static function getUserInfo($args)
 	{
-		$queryParams = 'username, firstname, lastname, country,  about';
+		$queryParams = 'id, username, firstname, lastname, country,  about';
 		$whereClause = 'username = ' . "'" . $args . "'"; 
         return Model::executeSelectQuery(UserModel::$table, $queryParams, $whereClause);
+	}
+
+	public static function checkUsername($args)
+	{
+		$queryParams = 'username';
+		$whereClause = 'username = ' . "'" . $args . "'"; 
+        
+        $usernameCheck = Model::executeSelectQuery(UserModel::$table, $queryParams, $whereClause);
+
+        return $usernameCheck;
+	}
+
+	public static function addUser($args)
+	{
+        $newUser = Model::executeInsertStatement(UserModel::$table, $args);
+
+        return $newUser;
 	}
 }
 ?>

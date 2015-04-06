@@ -2,25 +2,25 @@ define([
 	'backbone',
 ], function(backbone) {
 
-	var loginButton = document.getElementById('login');
+	var loginDiv = document.getElementById('login');
+	var loginButton = document.getElementById('loginButton');
 	loginButton.addEventListener('click', validate, false);
-	loginButton.click();
+	var loginAttempts = 0;
+	// loginButton.click();
 	console.log('Waiting for click');
 
 	function validate()
 	{
+		console.log('Validating Login');
 		var User = backbone.Model.extend({
 			urlRoot: '/../finalYearProject/mvc/Controllers/User.php', //call php controller
 		});
 
 		var userDetails = {
 			functionName: 'login',
-			username: 'dafg',
-			password: 'dafgd'
+			username: document.getElementById('username').value,
+			password: document.getElementById('password').value
 		};
-
-			// username: document.getElementById('username').value,
-			// password: document.getElementById('password').value
 
 		var user = new User;
 
@@ -28,12 +28,48 @@ define([
 		user.save(userDetails, {
 			type: 'POST',
 			success: function(user) {
-				console.log(user);
+				if(user.attributes.result === 'Successful')
+				{
+					var loggedInUser = {
+						id: user.attributes.id,
+						username: user.attributes.username,
+						firstname: user.attributes.firstname,
+						lastname: user.attributes.lastname,
+						country: user.attributes.country,
+						about: user.attributes.about
+					}
+					user.destroy();
+					console.log(user);
+					console.log('Login Successful');
+					handleLoginSuccess(loggedInUser);
+				}
+				else
+				{
+					console.log('Failure to login');
+					loginAttempts++;
+					if(loginAttempts > 5)
+					{
+						console.log('Lock out here');
+					}
+				}
 			},
 			wait: true
 		});
+	}
 
-		//CALL MUSIC TO GET ALL FILES THAT BELONG TO LOGGED IN USER
+	function handleLoginSuccess(user)
+	{
+		//Remove Log in 
+		loginDiv.parentNode.removeChild(loginDiv);
+		console.log(loginDiv);
 
+		//GET ALL TRACKS INFO OWNED BY USER
+		var User = backbone.Model.extend({
+			urlRoot: '/../finalYearProject/mvc/Controllers/Music.php', //call php controller
+		});
+
+		var musicDetails = {
+			id: user.id
+		};
 	}
 });

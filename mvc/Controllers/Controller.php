@@ -6,7 +6,7 @@ class Controller
 {
 	function __construct() //Empty Constructor
 	{
-
+		$this->$view = new RenderView();
 	}
 
 	public function GET($args)
