@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="/../finalYearProject\Public\thirdPartyLibs\require-min.js"></script> 
+        <script>
+        require(['common'], function() { //Common first called to define require.config
+        	require(['sampleCloud/libs/Charting/charting']);	//charting called next
+        });
+        </script>
+        <style> #chart{ display: inline; width: 600px; height: 400px;}        </style>
+    </head>
+    <body>
+		<div id="chart"></div>
+    </body>
+</html>

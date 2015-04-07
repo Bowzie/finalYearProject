@@ -6,30 +6,100 @@ class User extends Controller
 {
 	function __construct() //Empty Constructor
 	{
+
 	}
 
 	public function HandleRequest() {
 		//TODO switch other request methods (will probably only be delete used) and do switch in controller.php instead
 		switch($_SERVER['REQUEST_METHOD']) {
-			case 'POST': $this->POST(file_get_contents('php://input')); 
+			case 'POST': 
+				$this->POST( json_decode(file_get_contents('php://input'), true)); 
 			break;
-			default: echo 'crap';
 		}
 	}
 
 	//TODO create method to test request method from HTTP request and implement GET, PUT, DELETE etc.. 
-	public function POST($args)
+	private function POST($args)
+	{
+		switch($args['functionName'])
+		{
+			case 'login': $this->login($args);
+			break;
+			case 'checkUsername': $this->checkUsername($args);
+			break;
+			case 'addUser': $this->addUser($args);
+			break;
+		}
+	}
+
+	private function login($args)
 	{
 		header('Content-type: application/json');
 		header('X-Content-Type-Options: nosniff');
-		$userModel = new UserModel();
-		$userInfo = $userModel->getUserInfo($args[0]);
 
-		echo json_encode($userInfo);
+		$userModel = new UserModel();
+		$login = $userModel->checkLogin($args);
+
+		if($login === 'Successful')
+		{
+			$result = $userModel->getUserInfo($args['username']);
+			$result['result'] = 'Successful';
+			echo json_encode($result);
+		}	
+		else
+		{
+			$result['result'] = 'Failure';
+			echo json_encode($result);
+		}		
+	}
+
+	private function checkUsername($args)
+	{
+		header('Content-type: application/json');
+		header('X-Content-Type-Options: nosniff');
+
+		$userModel = new UserModel();
+		$username = $userModel->checkUsername($args['username']);
+
+		if($username === null)
+		{
+			$result['result'] = false;
+			echo json_encode($result);
+		}
+		else
+		{
+			$result['result'] = true;
+			echo json_encode($result);
+		}
+	}
+
+	private function addUser($args)
+	{
+		$userModel = new UserModel();
+		$newUser = $userModel->addUser($args);
+
+		if($newUser === true)
+		{
+			$newDir = '../../music/user-'.$args['username'];
+
+			mkdir($newDir, 0777, false);
+			// $files1 = scandir('../../music');
+			// var_dump($files1);
+		}
+		$result['result'] = $newUser;
+		
+		echo json_encode($result);
+	}
+
+	private removeUser($args)
+	{
+		//remove all user's music first
+		//remove entry from user table 
+		//rmdir their folder on
 	}
 }
 
-//TODO Remove code below and have HandleRequest() called in class instead
 $user = new User();
 $user->HandleRequest();
+
 ?>

@@ -1,0 +1,27 @@
+<!DOCTYPE html
+><html>
+<head>
+<link rel="stylesheet" type="text/css" href="recorder.css">
+<script type="text/javascript" src="testRecorder.js"></script>
+<style>
+</style> 
+</head>
+<body>
+	<div id="recorder">
+		<h2>How to use the recorder: </h2>
+		<p>Press start recording to begin and stop recording when your're done, it's that easy!</p>
+		<p>Play will play whatever you just recorded and reset will start fresh (no chart or play)</p><br>
+		<button id="recStart">Start Recording</button>
+		<button id="recStop">Stop Recording</button> 
+		<button id="play">Play</button>
+		<button id="reset">Reset</button>	<br>
+		<canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;"></canvas>
+	</div>
+</body>
+<script>
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");
+	ctx.fillStyle = "#FF0000";
+	ctx.fillRect(0,0,150,75);
+</script>
+</html>

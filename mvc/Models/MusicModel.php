@@ -11,13 +11,32 @@ class MusicModel extends Model
 	private $pathToTrack;
 
 	private static $table = 'music';
-	private static $musicSelectQueryParam = 'title, path'; //TODO add more params when needed
+	// private static $musicSelectQueryParam = 'title, path'; //TODO add more params when needed
 
 	//TODO pass in user name into function params, need to implement log in first and check if session is current
-	public static function getMusicInfo() 
+	public static function getTrackInfo($args) 
 	{
-        return Model::executeSelectQuery(MusicModel::$table, MusicModel::$musicSelectQueryParam);
+		$queryParams = 'title',
+		$whereClause = '_userid = ' . "'" . $args . "'"; 
+        return Model::executeSelectQuery(MusicModel::$table, $queryParams, $whereClause);
 	}
-}
 
+	public static function getTrackPath($args)
+	{
+		$queryParams = 'title'
+		$whereClause = 'title = ' . "'" . $args['trackname'] . "'" . ' AND ' . '_userid = ' . "'" . $args . "'";
+		return Model::executeSelectQuery(MusicModel::$table, $queryParams, $whereClause);
+ 	}
+
+ 	public static function addTrackEntryToDb($args)
+ 	{
+ 		return Model::executeInsertStatement(MusicModel::$table, $args);
+ 	}
+
+ 	public static function removeTrackEntryFromDB($args)
+ 	{
+ 		$whereClause = 'title = ' . "'" . $args['trackname'] . "'" . ' AND ' . '_userid = ' . "'" . $args . "'";
+ 		return Model::executeDeleteStatement(MusicModel::$table, $whereClause);
+ 	}
+}
 ?>

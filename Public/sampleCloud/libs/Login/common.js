@@ -4,9 +4,5 @@ require.config({
         jquery: 'thirdPartyLibs/jquery-min',
         underscore: 'thirdPartyLibs/underscore-min',
         backbone: 'thirdPartyLibs/backbone-min',
-        d3: 'thirdPartyLibs/d3.min',
-        dspFunctions: 'sampleCloud/libs/dsp/dspFunctions',
-        charting: 'sampleCloud/libs/charting/charting',
-        fileSelection: 'sampleCloud/libs/fileSelection/fileSelection'
     }
 });

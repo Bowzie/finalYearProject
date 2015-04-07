@@ -1,7 +1,10 @@
-window.onload = function() {
-	var userDiv = document.getElementById('outputInfo');
+var user = {
+	userData: null
+};
 
-	console.log(userDiv);
+user.GetUserData = function(userId)
+{
+	var userDiv = document.getElementById('outputInfo');
 
 	var xmlHttpGet = new XMLHttpRequest();
 	var userId = 1;
@@ -10,9 +13,7 @@ window.onload = function() {
 	xmlHttpGet.send(userId);
 
 	xmlHttpGet.onload = function() {
-		response = JSON.parse(xmlHttpGet.responseText);
-		console.log(response);
-
-		document.getElementById('outputInfo').innerHTML = response.id + ' ' + response.userName;
+		userData = JSON.parse(xmlHttpGet.responseText);
 	}
 }
+
