@@ -26,18 +26,17 @@ class Model
 	{
 		$db = new Database;
 
-		//Remove argument values to null if they are left blank when user submits register form
+		//Remove argument values to null if they are left blank when user submits register form, also remove functionName parameter
 		foreach ($args as $key => $value) {
-			if(empty($args[$key]))
+			if(empty($args[$key]) || $key = 'functionName')
 			{
 				unset($args[$key]);
 			}
 		}
 
-		//Send arguments to string, excluding first element (which is functionName)
-		$into = implode(',', array_keys(array_slice($args, 1)));
-
-		$values = "'" . implode("','", array_slice($args, 1)) . "'";
+		//Send arguments to string
+		$into = implode(',', array_keys($args));
+		$values = "'" . implode("','", $args) . "'";
 
 		$query = 'INSERT INTO ';
 		$query .= '`' . $db->getDbName() . '`.`' . $table . '` ';
@@ -49,7 +48,20 @@ class Model
 		return Model::executeQuery($table, $db, $statement, 'insert');
 	}
 
-	protected static function executeQuery($table, $db, $statement, $type) {
+	protected static function executeDeleteStatement($table, $whereClause)
+	{
+		$db = new Database;
+
+		$query = 'DELETE ';
+        $query .= ' FROM ' . '`' . $db->getDbName() . '`.`' . $table . '` ';
+     	$query .= 'WHERE ' . $whereClause;
+		$statement = $db->prepare($query);
+
+		return Model::executeQuery($table, $db, $statement, 'delete');
+	}
+
+	protected static function executeQuery($table, $db, $statement, $type) 
+	{
 	 	$result = $statement->execute();
 
 	 	if($table === 'user' && $type === 'select') 
@@ -57,16 +69,16 @@ class Model
 			$data = $statement->fetch(PDO::FETCH_ASSOC); //Single result only
 			var_dump($data);
 	 	}
-	 	else if($table === 'user' && $type === 'insert') //Check if insert was successful
+	 	else if($table === 'music')
+	 	{
+	 		$data = $statement->fetchAll(PDO::FETCH_ASSOC); //Multiple results possible
+	 	}
+	 	else if($type === 'insert') //Check if insert was successful
 	 	{
 	 		if($result === true)
 	 		{
 	 			$data = true;
 	 		}
-	 	}
-	 	else if($table === 'music')
-	 	{
-	 		$data = $statement->fetchAll(PDO::FETCH_ASSOC); //Multiple results possible
 	 	}
 
         return ($data) ? $data : null;

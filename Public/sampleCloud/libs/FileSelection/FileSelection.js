@@ -48,7 +48,7 @@ define(function () {
 			evt.dataTransfer.dropEffect = 'copy'; //Copy file when it is dropped into fileDropArea (default is download)
 		},
 
-		//Read file contents as array buffer
+		//Read file contents as array buffer //ADD CALLBACKS
 		fileReadToBuff: function(fileList) 
 		{
 			//TODO check if audio context works in browser

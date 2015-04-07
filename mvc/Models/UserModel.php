@@ -42,9 +42,7 @@ class UserModel extends Model
 
 	public static function addUser($args)
 	{
-        $newUser = Model::executeInsertStatement(UserModel::$table, $args);
-
-        return $newUser;
+        return Model::executeInsertStatement(UserModel::$table, $args);
 	}
 }
 ?>

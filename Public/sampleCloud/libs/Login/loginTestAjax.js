@@ -19,17 +19,6 @@ define([
 	console.log('Waiting for click');
 	location.hash = 'SampleCloud';
 
-	var regDetails = {
-			functionName: 'addUser',
-			username: 'abcdefg',
-			password: 'a',
-			email: 'a',
-			firstname: 'a', 
-			lastname: 'a',
-			country: 'a'
-	}
-
-	addUser();
 	function validate(evt)
 	{
 		evt.preventDefault();
@@ -75,7 +64,6 @@ define([
 
 			}
 		});
-		console.log('Ajax');
 	}
 
 	function register(evt)
@@ -111,27 +99,21 @@ define([
 				console.log(err);
 			}
 		});
-		// registerForm.style.display = 'none';
-		//send data to user.php 
-
-		//add to user table
-		//show that register was successful
-		//go to login
 	}
 
 	function addUser()
 	{
-		// var regElements = reg.elements;
+		var regElements = reg.elements;
 
-		// var regDetails = {
-		// 	functionName: 'addUser',
-		// 	username: regElements['username'].value,
-		// 	password: regElements['password'].value,
-		// 	email: regElements['email'].value,
-		// 	firstname: regElements['firstname'].value, 
-		// 	lastname: regElements['username'].value,
-		// 	country: regElements['country'].value
-		// }
+		var regDetails = {
+			functionName: 'addUser',
+			username: regElements['username'].value,
+			password: regElements['password'].value,
+			email: regElements['email'].value,
+			firstname: regElements['firstname'].value, 
+			lastname: regElements['username'].value,
+			country: regElements['country'].value
+		}
 		console.log(regDetails);
 		// reg.reset();
 

@@ -1,41 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-<script src="/../finalYearProject\Public\thirdPartyLibs\require-min.js"></script> 
-<link rel="stylesheet" type="text/css" href="login.css">
-<script>
-require(['common'], function() { //Common first called to define require.config
-	require(['sampleCloud/libs/Login/loginTestAjax']);	//testEncode called next
-});
-</script>
-</head>
-<body>
-	<title>SAMPLE CLOUD</title>
- 	<img src="clouds.gif" alt="sampleCloud" style="width:20%;height:20%; margin: auto;">
- 	<h1> WELCOME TO SAMPLE CLOUD </h1>
- 	<div id="login">
-		<label>User Name :</label><br>
-		<input type="text" name="username" id="username"/>
-		<br>
-		<label>Password :</label><br>
-		<input type="password" name="password" id="password"/>
-		<br>
-		<button id="loginButton">Login</button>
-	</div>
-	<div id="registration">
-		<label>User Name :</label><br>
-		<input type="text" name="username" id="username"/>
-		<br>
-		<label>Password :</label><br>
-		<input type="password" name="password" id="password"/>
-		<br>
-		<label>Re-enter Password :</label><br>
-		<input type="password" name="password" id="password2"/>
-		<br>	
-		<label>Email :</label><br>
-		<input type="password" name="password" id="password2"/>
-		<br>	
-	</div>
-	<div id="musicList"></div>
-</body>	
-</html>	
+<form id="login" method="POST">
+	<h2 style="text-align:center">Login</h2>
+	<label>User Name :</label><br>
+	<input type="text" name="username" id="usernameLogin" required/>
+	<br>
+	<label>Password :</label><br>
+	<input type="password" name="password" id="passwordLogin" required/>
+	<br>
+	<input type="submit" value="Login" id="loginButton"/>
+</form>
