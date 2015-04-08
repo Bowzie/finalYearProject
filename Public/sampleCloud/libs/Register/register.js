@@ -23,7 +23,6 @@ define(function () {
 					dataType: 'json',
 					contentType: 'application/json; charset=UTF-8',
 					success: function(user) {
-						callback(user);
 						if(user.result === true)
 						{
 							console.log('On server');

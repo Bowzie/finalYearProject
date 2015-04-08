@@ -13,84 +13,102 @@ class Music extends Controller
 		//TODO switch other request methods (will probably only be delete used) and do switch in controller.php instead
 		switch($_SERVER['REQUEST_METHOD']) {
 			case 'POST': 
-				$this->POST( json_decode(file_get_contents('php://input'), true)); 
+				$this->POST(); 
 			break;
 		}
 	}
 
-	public function POST($args)
+	public function POST()
 	{
-		switch($args['functionName'])
-		{
-			case 'getTrackList': $this->getTrackList($args);
-			break;
-			case 'getTrack': $this->checkUsername($args);
-			break;
-			case: 'addTrack': $this->addTrack($args);
-			break;
-			case 'deleteTrack': $this->deleteTrack($args);
-			break;
+		$args =  json_decode(file_get_contents('php://input'), true);
+		if(isset($args))
+		{	
+			
+			switch($args['functionName'])
+			{
+				case 'getTrackList': $this->getTrackList($args);
+				break;
+				case 'getTrackPath': $this->getTrackPath($args);
+				break;
+				case 'addTrack': $this->addTrack($args);
+				break;
+				case 'addDbEntry': $this->addDbEntry($args);
+				break;
+				case 'deleteTrack': $this->deleteTrack($args);
+				break;
+				case 'deleteDbEntry': $this->deleteDbEntry($args);
+				break;
+			}
 		}
+		else if(isset($_FILES))
+		{
+			$this->addTrack();
+		}
+		else {
+			$result['result'] = false;
+			$result['error'] = 'Error';
+			echo json_encode($result);
+		}
+		
 
 	}
 
 	private function getTrackList($args)
 	{
 		$musicModel = new MusicModel();
-		$music = $musicModel->getTrackList($args['id']);
+		$music = $musicModel->getTrackList($args['_userId']);
 		echo json_encode($music);		
 	}
 
-	private function getTrack($args) //args trackname
+	private function getTrackPath($args) //args id username trackname
 	{
 		$musicModel = new MusicModel();
 		$trackPath = $musicModel->getTrackPath($args);
-		$file = file_get_contents('../../music/' + $args['username'] + '/' + $trackPath);
+		$title =  $trackPath[0]['path'];
+
+		$trackPath = '/../finalYearProject/music/' . $args['username'] . '/' . $title;
 		$result['result'] = true;
-		$result['track'] = $file;
+		$result['trackPath'] = $trackPath;
+
 		echo json_encode($result);
 	}
 
-	private function addTrack($args) //file
+	private function addTrack() //file
 	{
-		if($_FILES[0][$args['trackname']])
-		{
-			//add file to path 
-			$uploadDir = '../../music/' + $args['username'] + '/';
-			$uploadFilePath = $uploadDir .  $_FILES[0][$args['trackname']]
-			$filename =  $_FILES[0][$args['trackname']];
+		// print_r($_FILES);
 
-			if(move_uploaded_file($filename, $uploadFilePath))
-			{
-				$result['result'] = true;
-				$result['filepath'] = $uploadFilePath;
-			}
-			else {
-				$result['result'] = false;	
-				$result['error'] = 'Error uploading file';
-			}
+		//add file to path 
+		$uploadDir = '../../music/' . $_FILES['file']['name'][1] . '/';
+		$tmp_name =  $_FILES['file']['tmp_name'][0];
+		$filename = $_FILES['file']['name'][0];
+		$uploadPath = $uploadDir . $filename;
+		if(move_uploaded_file($tmp_name, $uploadPath))
+		{
+			$result['result'] = true;
+			$result['filename'] = $filename;
 		}
 		else {
-			$result['result'] = false;
-			$result['error'] = 'File does not exist';
+			$result['result'] = false;	
+			$result['error'] = 'Error uploading file';
 		}
+
 		echo json_encode($result);
 	}
 
 	private function deleteTrack($args) //args trackname username
 	{
 		//delete file
-		$uploadDir = '../../music/' + $args['username'] + '/';
-		$deleted = unlink($uploadDir + $args['trackname']);
+		$uploadDir = '../../music/' . $args['username'] . '/';
+		$deleted = unlink($uploadDir . $args['path']);
+
 		$result['result'] = $deleted;
 		echo json_encode($result);
 	}
 
-	private function addDBEntry($args) //_userId title 
+	private function addDbEntry($args) //_userId title path
 	{
 		//add entry to db;
 		$musicModel = new MusicModel();
-		$args['path']
 		$music = $musicModel->addTrackEntryToDb($args);
 
 		if($music === true)
@@ -103,10 +121,10 @@ class Music extends Controller
 		echo json_encode($result);
 	}
 
-	private function deleteDBEntry($args) //_userId title
-	{
+	private function deleteDbEntry($args) //_userId title
+	{		
 		$musicModel = new MusicModel();
-		$music = $musicModel->removeTrackEntryFromDB($args)
+		$music = $musicModel->deleteTrackEntryFromDb($args);
 
 		if($music === true)
 		{

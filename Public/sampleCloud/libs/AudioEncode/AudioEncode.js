@@ -48,7 +48,7 @@ define(function () {
 
                 var mp3data = Lame.encode_buffer_ieee_float(mp3codec, data.left, data.right, dataLength);
 
-                blob = new Blob([mp3data.data], { type: 'audio/mp3' });
+                var blob = new Blob([mp3data.data], { type: 'audio/mp3' });
 
                 console.log(mp3data.data);
                 console.log('Done MP3 encoding');

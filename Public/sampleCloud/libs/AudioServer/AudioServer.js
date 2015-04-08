@@ -83,7 +83,7 @@ define(function () {
     			var textblob = new Blob([], { type: 'text' });
 
     			formData.append('file[0]', blob, 'bleh.wav'); 
-				formData.append('file[1]', textblob, 'dafg');
+				formData.append('file[1]', textblob, 'dafg'); //Kind of a hack
 
     			console.log(formData);
     			$.ajax({
@@ -173,7 +173,7 @@ define(function () {
     	}
     }
 
-    return fileFromServer;
+    return AudioServer;
 });
 
 

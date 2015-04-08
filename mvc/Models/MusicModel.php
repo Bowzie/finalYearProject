@@ -14,17 +14,17 @@ class MusicModel extends Model
 	// private static $musicSelectQueryParam = 'title, path'; //TODO add more params when needed
 
 	//TODO pass in user name into function params, need to implement log in first and check if session is current
-	public static function getTrackInfo($args) 
+	public static function getTrackList($args) 
 	{
-		$queryParams = 'title',
+		$queryParams = 'title';
 		$whereClause = '_userid = ' . "'" . $args . "'"; 
         return Model::executeSelectQuery(MusicModel::$table, $queryParams, $whereClause);
 	}
 
 	public static function getTrackPath($args)
 	{
-		$queryParams = 'title'
-		$whereClause = 'title = ' . "'" . $args['trackname'] . "'" . ' AND ' . '_userid = ' . "'" . $args . "'";
+		$queryParams = 'path';
+		$whereClause = 'title = ' . "'" . $args['trackname'] . "'" . ' AND ' . '_userid = ' . "'" . $args['_userId'] . "'";
 		return Model::executeSelectQuery(MusicModel::$table, $queryParams, $whereClause);
  	}
 
@@ -33,9 +33,9 @@ class MusicModel extends Model
  		return Model::executeInsertStatement(MusicModel::$table, $args);
  	}
 
- 	public static function removeTrackEntryFromDB($args)
+ 	public static function deleteTrackEntryFromDb($args)
  	{
- 		$whereClause = 'title = ' . "'" . $args['trackname'] . "'" . ' AND ' . '_userid = ' . "'" . $args . "'";
+ 		$whereClause = 'title = ' . "'" . $args['title'] . "'" . ' AND ' . '_userid = ' . "'" . $args['_userId'] . "'";
  		return Model::executeDeleteStatement(MusicModel::$table, $whereClause);
  	}
 }

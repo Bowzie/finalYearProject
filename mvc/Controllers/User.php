@@ -75,13 +75,22 @@ class User extends Controller
 
 	private function addUser($args)
 	{
+		$salt = mcrypt_create_iv(22, MCRYPT_DEV_URANDOM);
+		$options = [
+			'cost' => 10,
+		    'salt' => $salt
+		];
+
+		$hash = password_hash($args['password'], PASSWORD_BCRYPT, $options);
+		$args['password'] = $hash;
+
 		$userModel = new UserModel();
 		$newUser = $userModel->addUser($args);
 
 		if($newUser === true)
 		{
 			$newDir = '../../music/user-'.$args['username'];
-
+			//catch error
 			mkdir($newDir, 0777, false);
 			// $files1 = scandir('../../music');
 			// var_dump($files1);
