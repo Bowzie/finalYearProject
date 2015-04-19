@@ -6,12 +6,12 @@ define([
 	var logoutButton = document.getElementById('logoutButton');
 	var registerButton = document.getElementById('registerButton');
 	var top = document.getElementById('top');
-	var registerForm = document.getElementById('registration');
-	var musicList = document.getElementById('musicList');
-	console.log(registerButton);
-	// var header1 = document.getElementById('header');
-	loginDiv.addEventListener('submit', validate, false);
-	registerForm.addEventListener('submit', register, false);
+	// var registerForm = document.getElementById('registration');
+	// var musicList = document.getElementById('musicList');
+	// console.log(registerButton);
+	// // var header1 = document.getElementById('header');
+	// loginDiv.addEventListener('submit', validate, false);
+	// registerForm.addEventListener('submit', register, false);
 	// registerButton.click();
 
 	var loginAttempts = 0;

@@ -5,10 +5,26 @@ define(function () {
     }
 
     login.prototype = {
-    	validate : function(evt, callback) {
-    		require('jquery', function($) {
-				evt.preventDefault();
-		
+    	loadLogin: function(callback)
+		{
+			require(['jquery'], function($) {
+				$('#main').load('libs/login/login.html', function() {
+					callback(true);
+				});
+			});
+		},
+
+		removeLogin: function(div)
+		{
+			require(['jquery'], function($) {
+				$('#login').hide();
+			});
+		},
+
+    	validate : function(callback) {
+    		require(['jquery'], function($) {
+
+				console.log('validating');
 				var userDetails = {
 					functionName: 'login',
 					username: document.getElementById('usernameLogin').value,
@@ -51,11 +67,16 @@ define(function () {
 				});
     		})
     	},
-    	logout: function(evt) {
-    		evt.preventDefault();
+    	logout: function(main) {
+    		// remove all divs in main
+    		while (main.firstChild) {
+			  main.removeChild(main.firstChild);
+			}
+			//load login
+
     	}
     	//recover, change password and register should be implemented
     }
 
-    return Login;
+    return login;
 });

@@ -85,7 +85,7 @@ class Music extends Controller
 		if(move_uploaded_file($tmp_name, $uploadPath))
 		{
 			$result['result'] = true;
-			$result['filename'] = $filename;
+			// $result['filename'] = $filename;
 		}
 		else {
 			$result['result'] = false;	

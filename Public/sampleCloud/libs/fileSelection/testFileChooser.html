@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="fileSelection.css">
+<script type="text/javascript" src="/../finalYearProject/Public/thirdPartyLibs/require-min.js"></script>
+</head>
+<body>
+	<div id="audioChooserWrapper">
+		<input type="file" id="fileChooser" accept="audio/wav, audio/mp3, audio/ogg, audio/aac">
+		<div id="drop">Drag File Here</div>	
+		<button id="loadAudio">Load</button>
+		<canvas id="myCanvas"</canvas>	
+	</div>
+</body>
+<script>
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");
+	ctx.fillStyle = "#FF0000";
+	ctx.fillRect(0,0,150,75);
+</script>
+</html>

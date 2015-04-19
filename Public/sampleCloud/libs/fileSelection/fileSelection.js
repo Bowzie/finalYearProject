@@ -19,6 +19,18 @@ define(function () {
 			this.audioBuffer = input;
 		},
 
+		loadRecorder: function(div)
+		{
+			require(['jquery'], function($) {
+				$(div).load('recorder.html');
+			});
+		},
+
+		removeRecorder: function(div)
+		{
+			div.parentNode.removeChild(div);
+		},
+
 		//Get file from file chooser and read to buffer
 		handleFileSelectFromFileChooser: function(evt) 
 		{	

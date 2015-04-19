@@ -5,9 +5,25 @@ define(function () {
     }
 
     register.prototype = {
-    	register: function(evt, callback) {
+
+    	loadRegister: function(div, callback)
+		{
+			require(['jquery'], function($) {
+				$(div).load('libs/register/register.html', function() {
+					callback(true);
+				});
+			});
+		},
+
+		removeRegister: function()
+		{
+			require(['jquery'], function($) {
+				$('#registration').hide();
+			});
+		},
+
+    	register: function(callback) {
     		require(['jquery'], function($) {
-				evt.preventDefault();
 				//display register form
 				//add event listener to button click
 				console.log('Checking if username exists on db');
@@ -25,11 +41,10 @@ define(function () {
 					success: function(user) {
 						if(user.result === true)
 						{
-							console.log('On server');
+							callback(user.result);
 						}
 						else
 						{
-							console.log('not on server');
 							register.prototype.addUser(document.forms['registration'], function(result) {
 								callback(result);
 							});
@@ -40,7 +55,7 @@ define(function () {
 					}
 				});
     		});
-    	}
+    	},
     	addUser: function(registration, callback) {
     		require(['jquery'], function($) {
 				var regElements = registration.elements;
@@ -54,7 +69,7 @@ define(function () {
 					lastname: regElements['username'].value,
 					country: regElements['country'].value
 				}
-				console.log(regDetails);
+
 				registration.reset();
 
 				$.ajax({
@@ -81,7 +96,6 @@ define(function () {
 					}
 				});
     		});
-			
     	}
     }
 

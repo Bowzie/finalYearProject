@@ -77,13 +77,13 @@ define(function () {
 
 			xmlHttpGet.send();
     	},
-    	addTrack: function(blob, callback) {
+    	addTrack: function(blob, username, callback) {
     		require(['jquery'], function() {
     			var formData = new FormData();
     			var textblob = new Blob([], { type: 'text' });
 
     			formData.append('file[0]', blob, 'bleh.wav'); 
-				formData.append('file[1]', textblob, 'dafg'); //Kind of a hack
+				formData.append('file[1]', textblob, username); //Kind of a hack
 
     			console.log(formData);
     			$.ajax({
@@ -121,6 +121,16 @@ define(function () {
 						callback(err);
 					}
 				});
+    		});
+    	},
+    	updateTrack: function (trackDetails, blob, callback)
+    	{
+    		require(['jquery'], function() {
+    			AudioServer.prototype.deleteTrack(tracDetails, function() {
+    				AudioServer.prototype.addTrack(blob, trackDetails.username, function(response) {
+    					callback(response);
+    				});
+    			});
     		});
     	},
     	addDbEntry: function(userDetails, callback) {

@@ -1,0 +1,53 @@
+p {
+	color: red;
+}
+
+/*#fileChooser {
+	display: inline-block;
+	float: left;
+	margin: 10;
+}*/
+
+#drop {
+	display: inline-block;
+	float: left;
+	height: 30px;
+	width: 25%;
+	border: 1px dashed;
+	border-radius: 5px;
+	padding: 25px;
+	text-align: center;
+}
+
+input[type=file] {
+	margin: 5px;
+	padding: 0 10px;
+	width: 200px;
+	height: 34px;
+	color: #404040;
+	background: white;
+	border: 1px solid;
+	border-color: #c4c4c4 #d1d1d1 #d4d4d4;
+	border-radius: 2px;
+	outline: 5px solid #eff4f7;
+	-moz-outline-radius: 3px; 
+	@include box-shadow(inset 0 1px 3px rgba(black, .12));
+}
+
+input[type=file]:focus {
+	border-color: #7dc9e2;
+	outline-color: #dceefc;
+	outline-offset: 0; 
+}
+
+input[type=file]:required {
+	border-color: red;
+	outline-color: #dceefc;
+	outline-offset: 0; 
+}
+
+input[type=file]:valid {
+	border-color: green;
+	outline-color: #dceefc;
+	outline-offset: 0; 
+}

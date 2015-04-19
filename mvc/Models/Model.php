@@ -78,7 +78,6 @@ class Model
 	 	else if($table === 'user' && $type === 'select') 
 	 	{	
 			$data = $statement->fetch(PDO::FETCH_ASSOC); //Single result only
-			var_dump($data);
 	 	}
 	 	else if($table === 'music')
 	 	{

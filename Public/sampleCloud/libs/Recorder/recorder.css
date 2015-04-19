@@ -8,21 +8,24 @@ body {
 #recorder {
 	display: inline-block;
 	position: relative;
-	margin: 10% auto;
+	/*margin: 10% auto;*/
 	padding: 20px;
 	max-width: 800px;
 	background: white;
 	border-radius: 10px;
-	left: 27%;
+	left: 23%;
 }
 
 button {
+	float: left;
+    display:inline-block; 
 	margin: 10px auto;
+	margin-left: 10px;
 	width: 100px;
-	display: inline;
+	min-height: 60px;
 	background: #0ca3d2;
 	margin-top: 15px;
-	border-radius: 8px;
+	border-radius: 8px;	
 	font-family: Arial;
 	color: #ffffff;
 	font-size: 20px;
@@ -30,6 +33,16 @@ button {
 	text-decoration: none;
 }
 
+button:focus {
+	outline: none;
+}
+
+h2, p {
+	clear: left;
+	text-align: left;
+	display: inline-block;
+	float: right;
+}
 canvas {
 	/*display: none;*/
 	width: 700px;

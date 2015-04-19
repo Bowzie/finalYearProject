@@ -40,15 +40,15 @@ class User extends Controller
 		$userModel = new UserModel();
 		$login = $userModel->checkLogin($args);
 
-		if($login === 'Successful')
+		if($login === true)
 		{
 			$result = $userModel->getUserInfo($args['username']);
-			$result['result'] = 'Successful';
+			$result['result'] = true;
 			echo json_encode($result);
 		}	
 		else
 		{
-			$result['result'] = 'Failure';
+			$result['result'] = false;
 			echo json_encode($result);
 		}		
 	}
@@ -89,7 +89,7 @@ class User extends Controller
 
 		if($newUser === true)
 		{
-			$newDir = '../../music/user-'.$args['username'];
+			$newDir = '../../music/'.$args['username'];
 			//catch error
 			mkdir($newDir, 0777, false);
 			// $files1 = scandir('../../music');
@@ -100,7 +100,7 @@ class User extends Controller
 		echo json_encode($result);
 	}
 
-	private removeUser($args)
+	private function removeUser($args)
 	{
 		//remove all user's music first
 		//remove entry from user table 

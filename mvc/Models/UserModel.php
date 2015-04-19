@@ -15,11 +15,11 @@ class UserModel extends Model
 
 		if(password_verify($args['password'], $hash['password']))
 		{
-			return 'Successful';
+			return true;
 		}
 		else 
 		{
-			return 'Failure';
+			return false;
 		}
 	}
 
