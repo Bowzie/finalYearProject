@@ -19,14 +19,14 @@ define(function () {
 			this.audioBuffer = input;
 		},
 
-		loadRecorder: function(div)
+		loadFileSelection: function(div)
 		{
 			require(['jquery'], function($) {
-				$(div).load('recorder.html');
+				$(div).load('libs/fileSelection/fileSelection.html');
 			});
 		},
 
-		removeRecorder: function(div)
+		removeFileSelection: function(div)
 		{
 			div.parentNode.removeChild(div);
 		},

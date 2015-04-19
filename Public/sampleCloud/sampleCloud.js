@@ -42,8 +42,11 @@ define([
 	{
 		sampleCloud.login.loadLogin(function(response) {
 			var loginDiv = document.getElementById('login');
+
 			loginDiv.addEventListener('submit', validate, false);
+
 			var registerButton = document.getElementById('registerButton');
+
 			registerButton.addEventListener('click', function(evt) {
 				evt.preventDefault();
 				evt.stopImmediatePropagation();
@@ -51,6 +54,7 @@ define([
 				
 				loadRegister();
 			});
+
 			console.log(registerButton);
 		});
 	}
@@ -87,7 +91,8 @@ define([
 		});
 	}
 
-	function registerFormFunction(evt) {
+	function registerFormFunction(evt) 
+	{
 		evt.preventDefault();
 
 		sampleCloud.register.register(function(response) {
@@ -106,8 +111,110 @@ define([
 	function loadMusicPanel(user) 
 	{
 		sampleCloud.musicPanel = new musicPanel();
-		sampleCloud.musicPanel.loadMusicPanel(mainDiv, function () {
-			console.log('loaded');
+		sampleCloud.musicPanel.loadMusicPanel(mainDiv, function (response) {
+			handleMusicPanel(user);
 		});
+	}
+
+	function handleMusicPanel(user) 
+	{
+		var cloudButton = document.getElementById('cloudButton');
+		var uploadButton = document.getElementById('uploadButton');
+		var recorderButton = document.getElementById('recorderButton');
+
+		cloudButton.addEventListener('click', function(evt) {
+			evt.preventDefault();
+			evt.stopPropagation();
+			loadCloud(user);
+		}, false);
+		uploadButton.addEventListener('click', loadUpload, false);
+		recorderButton.addEventListener('click', loadRecorder, false);
+	}
+
+	function loadCloud(user) {
+		sampleCloud.audioServer = new audioServer();
+		sampleCloud.audioServer.getTrackList(user.id, function(response) {
+			if(response === null) {
+				alert('You have no tracks stored here!');
+			}
+		})
+		console.log(user);
+	}
+
+	function loadUpload() {
+		console.log("here");
+		sampleCloud.fileSelection = new fileSelection();
+		sampleCloud.fileSelection.loadFileSelection(mainDiv);
+	}
+
+	function loadRecorder() {
+		console.log('Recorder');
+
+		sampleCloud.recorder = new recorder();
+
+		sampleCloud.recorder.loadRecorder(mainDiv, function() {
+			console.log("init recorder");
+
+			//getMedia function set for different browsers
+			navigator.getMedia = ( navigator.mozGetUserMedia ||
+			                   navigator.getUserMedia ||
+			                   navigator.webkitGetUserMedia ||
+			                   navigator.msGetUserMedia);
+			
+			//Setup audio for mic input
+			try {
+				navigator.getMedia({audio:true}, function(stream) {
+					sampleCloud.recorder.setupAudio(stream, sampleCloud.audioContext);
+				}, function() {
+					alert('getMedia failed!');
+				});
+			} catch(err) {
+				console.log('getMedia failed! ' + err);
+			}
+
+			//Set divs to variables
+			var startRecorder = document.getElementById('recStart');
+			var stopRecorder = document.getElementById('recStop');
+			var play = document.getElementById('play');
+			var reset = document.getElementById('reset');
+
+			//Add event listeners
+			startRecorder.addEventListener('click', function(evt) {
+				evt.stopPropagation(); //Prevents further propagation of the current event
+				evt.preventDefault();  //Prevents default action occuring for event occurence
+
+				sampleCloud.recorder.startRecord(function(isRecording) {
+					if(isRecording === true) {
+
+					}
+					else {
+						//Read in from audio inputa and add to recording 
+					    sampleCloud.recorder.getJavaScriptNode().onaudioprocess = function (e) {
+					    	sampleCloud.recorder.addToRecordingBuffer(e.inputBuffer);
+					    }	
+					}
+				});
+			}, false); //Start recording when button pressed
+
+
+			stopRecorder.addEventListener('click', function(evt) {
+				evt.stopPropagation(); //Prevents further propagation of the current event
+				evt.preventDefault();  //Prevents default action occuring for event occurence
+				sampleCloud.recorder.stopRecord();
+			}, false); //Start recording when button pressed
+
+			play.addEventListener('click', function(evt) {
+				evt.stopPropagation(); //Prevents further propagation of the current event
+				evt.preventDefault();  //Prevents default action occuring for event occurence
+				console.log(sampleCloud.audioContext.destination);
+				var newSource = sampleCloud.audioContext.createBufferSource(); //Create new buffer source
+				newSource.buffer = sampleCloud.recorder.getAudioBuffer();
+				newSource.connect(sampleCloud.audioContext.destination); //Connect to output (speakers)
+				newSource.start(0); //plays the contents of the wav
+
+			}, false); //Start recording when button pressed	
+			reset.addEventListener('click', sampleCloud.recorder.reset, false);	
+		});
+
 	}
 });

@@ -1,0 +1,17 @@
+#musicPanel {
+	text-align: center;
+	margin: auto;
+}
+
+#cloud, #upload, #recorderPanel {
+	/*display: none;*/
+	position: relative;
+	padding: 20px;
+	padding-top: 10px;
+	margin: 20px;
+	width: 250px;
+	height: 250px;
+	background: white;
+	border-radius: 10px;
+	float: left;
+}

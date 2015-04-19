@@ -5,9 +5,11 @@ define(function () {
     }
 
     musicPanel.prototype = {
-    	loadMusicPanel: function(div) {
+    	loadMusicPanel: function(div, callback) {
     		require(['jquery'], function() {
-    			$(div).load('libs/musicPanel/musicPanel.html');
+    			$(div).load('libs/musicPanel/musicPanel.html', function() {
+                    callback(true);
+                });
     		});		
     	},
 
