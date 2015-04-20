@@ -6,7 +6,6 @@ define(function () {
 
     fileSelection.prototype = {
     	audioBuffer: {},
-    	loaded: false,
 
 		//Initialise fileChooser and fileDropArea
 		getAudioBuffer: function()
@@ -19,10 +18,12 @@ define(function () {
 			this.audioBuffer = input;
 		},
 
-		loadFileSelection: function(div)
+		loadFileSelection: function(div, callback)
 		{
 			require(['jquery'], function($) {
-				$(div).load('libs/fileSelection/fileSelection.html');
+				$(div).load('libs/fileSelection/fileSelection.html', function() {
+					callback(true);
+				});
 			});
 		},
 
@@ -38,6 +39,7 @@ define(function () {
 			evt.preventDefault();  //Prevents default action occuring for event occurence
 
 			var fileList = evt.target.files;	//Read fileList from target of event
+			console.log(fileList);
 			fileSelection.prototype.fileReadToBuff(fileList);	//Send fileList to function that will read file contents as array buffer
 		},
 
@@ -61,8 +63,9 @@ define(function () {
 		},
 
 		//Read file contents as array buffer //ADD CALLBACKS
-		fileReadToBuff: function(fileList) 
+		fileReadToBuff: function(fileList, callback) 
 		{
+			console.log("Hey");
 			//TODO check if audio context works in browser
 			var audioContext = new AudioContext(); //Create new audio context 
 			var fileReader = new FileReader()	//Create new file reader
@@ -72,7 +75,7 @@ define(function () {
 			fileReader.onload = function() {
 				var arrayBuffer = fileReader.result;
 				audioContext.decodeAudioData(fileReader.result, function(buffer){
-					setAudioBuffer(buffer);
+					callback(buffer);
 				});
 			}
 		}

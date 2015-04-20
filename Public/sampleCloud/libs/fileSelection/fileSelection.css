@@ -25,16 +25,6 @@ body {
 	margin: 10;
 }
 
-#drop {
-	display: inline-block;
-	float: left;
-	height: 30px;
-	width: 25%;
-	border: 1px dashed;
-	border-radius: 5px;
-	padding: 25px;
-	text-align: center;
-}
 
 /*#fileChooser {
 	display: inline-block;
@@ -46,8 +36,8 @@ body {
 	display: inline-block;
 	float: left;
 	margin-left: 25px;
-	height: 30px;
-	width: 25%;
+	height: 400px;
+	width: 300px;
 	border: 1px dashed;
 	border-radius: 5px;
 	padding: 25px;

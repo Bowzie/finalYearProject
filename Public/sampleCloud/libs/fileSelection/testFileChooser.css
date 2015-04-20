@@ -51,3 +51,15 @@ input[type=file]:valid {
 	outline-color: #dceefc;
 	outline-offset: 0; 
 }
+
+#audioChooserWrapper {
+	display: inline-block;
+	position: relative;
+	/*margin: 10% auto;*/
+	padding: 20px;
+	min-width: 900px;
+	min-height: 400px;
+	background: white;
+	border-radius: 10px;
+	left: 18%;
+}

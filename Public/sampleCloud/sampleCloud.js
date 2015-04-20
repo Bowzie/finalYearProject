@@ -133,24 +133,68 @@ define([
 
 	function loadCloud(user) {
 		sampleCloud.audioServer = new audioServer();
-		sampleCloud.audioServer.getTrackList(user.id, function(response) {
-			if(response === null) {
+		sampleCloud.audioServer.getTrackList(user.id, function(music) {
+			if(music === null) {
 				alert('You have no tracks stored here!');
 			}
+			else {
+				console.log(music);
+				var musicList = document.createElement('ul');
+				var label = document.createElement('label');
+				label.innerHTML = 'Your tracks stored on SampleCloud';
+				musicList.appendChild(label);
+				music.forEach(function(track) {
+					console.log(track);
+					var ul = document.createElement('ul');
+					ul.innerHTML = track.title;
+					musicList.appendChild(ul);
+				});	
+				mainDiv.appendChild(musicList);
+			}
 		})
-		console.log(user);
 	}
 
 	function loadUpload() {
-		console.log("here");
 		sampleCloud.fileSelection = new fileSelection();
-		sampleCloud.fileSelection.loadFileSelection(mainDiv);
+		sampleCloud.fileSelection.loadFileSelection(mainDiv, function() {
+			var fileChooser = document.getElementById('fileChooser');
+			var fileDropArea = document.getElementById('drop');
+			console.log(fileChooser);
+		 	fileChooser.addEventListener('change', function(evt) {
+		 		evt.stopPropagation(); //Prevents further propagation of the current event
+				evt.preventDefault();  //Prevents default action occuring for event occurence
+
+				var fileList = evt.target.files;	//Read fileList from target of event
+
+				sampleCloud.fileSelection.fileReadToBuff(fileList, function(buffer) {
+					console.log(buffer);
+				});	//Send fileList to function that will read file contents as array buffer
+		 	}, false);	
+
+		 	fileDropArea.addEventListener('dragover', function(evt) {
+		 		evt.stopPropagation(); //Prevents further propagation of the current event
+				evt.preventDefault();  //Prevents default action occuring for event occurence
+				console.log('dragover');
+				evt.dataTransfer.dropEffect = 'copy'; //Copy file when it is dropped into fileDropArea (default is download)
+		 	}
+		 	, false);
+		 	fileDropArea.addEventListener('drop', function(evt) {
+		 		evt.stopPropagation(); //Prevents further propagation of the current event
+				evt.preventDefault();  //Prevents default action occuring for event occurence
+
+				var fileList = evt.dataTransfer.files; //Read fileList from data transfer event
+				sampleCloud.fileSelection.fileReadToBuff(fileList, function(result) { 
+					console.log(result)
+				});	//Send fileList to function that will read file contents as array buffer
+		 	}, false);	
+		});
 	}
 
 	function loadRecorder() {
 		console.log('Recorder');
 
 		sampleCloud.recorder = new recorder();
+		sampleCloud.charting = new charting();
 
 		sampleCloud.recorder.loadRecorder(mainDiv, function() {
 			console.log("init recorder");
@@ -191,6 +235,7 @@ define([
 						//Read in from audio inputa and add to recording 
 					    sampleCloud.recorder.getJavaScriptNode().onaudioprocess = function (e) {
 					    	sampleCloud.recorder.addToRecordingBuffer(e.inputBuffer);
+					    	sampleCloud.charting.lineChart('recorderChart', e.inputBuffer);
 					    }	
 					}
 				});
@@ -200,21 +245,22 @@ define([
 			stopRecorder.addEventListener('click', function(evt) {
 				evt.stopPropagation(); //Prevents further propagation of the current event
 				evt.preventDefault();  //Prevents default action occuring for event occurence
+				var canvas = document.getElementById('recorderChart');
 				sampleCloud.recorder.stopRecord();
+				sampleCloud.charting.lineChart('recorderChart', sampleCloud.recorder.getAudioBuffer().getChannelData(0));
 			}, false); //Start recording when button pressed
 
 			play.addEventListener('click', function(evt) {
 				evt.stopPropagation(); //Prevents further propagation of the current event
 				evt.preventDefault();  //Prevents default action occuring for event occurence
-				console.log(sampleCloud.audioContext.destination);
 				var newSource = sampleCloud.audioContext.createBufferSource(); //Create new buffer source
 				newSource.buffer = sampleCloud.recorder.getAudioBuffer();
 				newSource.connect(sampleCloud.audioContext.destination); //Connect to output (speakers)
 				newSource.start(0); //plays the contents of the wav
-
 			}, false); //Start recording when button pressed	
+
+
 			reset.addEventListener('click', sampleCloud.recorder.reset, false);	
 		});
-
 	}
 });
