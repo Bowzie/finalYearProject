@@ -1,0 +1,49 @@
+<div id="mainPanel" style="clear:both;">
+	<div id="mainWrapper">
+		<div id="left-content">
+	        <div id="div1">
+	        	<select name="View" required>
+						<option value="view1">Normal View</option>
+						<option value="view2">Spectrogram</option>
+				</select>
+	        	<div id="mainChart"></div>
+	        </div>
+	        <div id="div2">
+		        <button id="mainPlay">Play</button>
+				<button id="mainStop">Stop</button> 
+				<button id="mainReset">Reset</button> <br>
+				<form id="saveForm" style="margin-top:50px; margin-left: 50px;">
+					<label>Track Name :</label>
+					<input type="text" required/>
+					<select name="format" required>
+						<option value="">Format</option>
+						<option value="WAV">WAV</option>
+						<option value="MP3_128">MP3 128Kbps</option>
+						<option value="MP3_256">MP3 256Kbps</option>
+						<option value="MP3_320">MP3 320Kbps</option>
+					</select>
+					<select name="Channels" required>
+						<option value="">Channels</option>
+						<option value="CH1">1</option>
+						<option value="CH2">2</option>
+					</select>
+					<button id="mainSave">Save</button>
+				</form>
+	        </div>
+    	</div>    
+	    <div id="div3">
+	        <ul id="sddm">
+    <li><a href="#" 
+        onmouseover="mopen('m1')" 
+        onmouseout="mclosetime()">Home</a>
+        <div id="m1" 
+            onmouseover="mcancelclosetime()" 
+            onmouseout="mclosetime()">
+        <a href="#">HTML/CSS</a>
+        <a href="#">DHTML Menu</a>
+        <a href="#">JavaScript</a>
+        </div>
+    </li>
+	    </div>
+	</div>
+</div>
