@@ -6,6 +6,17 @@ define(function () {
 
     AudioServer.prototype = {
     	audioBuffer: null,
+
+    	getAudioBuffer: function()
+		{
+			return this.audioBuffer;
+		},
+
+		setAudioBuffer: function(input)
+		{
+			this.audioBuffer = input;
+		},
+
     	loadAudioServer: function(div, callback)
 		{
 			require(['jquery'], function($) {
@@ -34,16 +45,7 @@ define(function () {
 					dataType: 'json',
 					contentType: 'application/json; charset=UTF-8',
 					success: function(music) {
-						callback(music);
-						// var label = document.createElement('label');
-						// label.innerHTML = 'Your tracks stored on SampleCloud';
-						// musicList.appendChild(label);
-						// music.forEach(function(track) {
-						// 	console.log(track);
-						// 	var ul = document.createElement('ul');
-						// 	ul.innerHTML = track.title;
-						// 	musicList.appendChild(ul);
-						// });		
+						callback(music);	
 					},
 					error: function(err) {
 						callback(err);

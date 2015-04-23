@@ -80,16 +80,6 @@ define(function () {
 					contentType: 'application/json; charset=UTF-8',
 					success: function(result) {
 						callback(result);
-						// if(user.result === true)
-						// {
-						// 	console.log('Added new user to database!');
-						// 	console.log(user);				
-						// 	//Remove registration div and go to login	
-						// }
-						// else
-						// {
-						// 	console.log('ERROR');
-						// }
 					},
 					error: function(err){
 						callback(err);

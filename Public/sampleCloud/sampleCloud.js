@@ -24,24 +24,34 @@ define([
 		login: null,
 		mainPanel: null,
 		musicPanel: null,
+		newSource: null,
 		recorder: null,
 		register: null,
+		user: null
 	}
 
-	//Determine if browser used supports web audio api
-	try {
-	  window.AudioContext = window.AudioContext || window.webkitAudioContext;
-	  sampleCloud.audioContext = new AudioContext();
-	} catch(e) {
-	  alert('Web Audio API is not supported in this browser');
-	}
 	mainDiv = document.getElementById('main');
 	var userPanel = document.getElementById('userPanel');
 	h1 = document.getElementById('header1');
-	sampleCloud.login = new login();
-	sampleCloud.register = new register();
-	 loadLogin();
-	//loadMainPanel(null);
+	var maxTime; 
+	init();
+
+	function init()
+	{
+		//Determine if browser used supports web audio api
+		try {
+		  window.AudioContext = window.AudioContext || window.webkitAudioContext;
+		  sampleCloud.audioContext = new AudioContext();
+		} catch(e) {
+		  alert('Web Audio API is not supported in this browser');
+		}
+		maxTime = sampleCloud.audioContext.sampleRate * 20; //Max 20 seconds
+		sampleCloud.login = new login();
+		sampleCloud.register = new register();
+	 	loadLogin();
+		//loadMainPanel(null);		
+	}
+
 
 	function loadLogin()
 	{
@@ -69,16 +79,56 @@ define([
 	{
 		h1.innerText = 'REGISTER FOR SAMPLE CLOUD';
 		sampleCloud.register.loadRegister(mainDiv, function() {
+
 			var registerForm = document.getElementById('registration');
+
 			registerForm.addEventListener('submit', registerFormFunction, false);
+
 			var loginButton = document.getElementById('loginButton');
-			loginButton.addEventListener('click', function(evnt) {
-				evnt.preventDefault();
-				evnt.stopPropagation();
+			loginButton.addEventListener('click', function(evt) {
+				evt.preventDefault();
+				evt.stopPropagation();
 				sampleCloud.register.removeRegister();
 				loadLogin();
-			})
+			}, false);
 		});
+	}
+
+	function userPanelEventListeners()
+	{
+		var homeButton = document.getElementById('homeButton');
+		var logoutButton = document.getElementById('logoutButton');
+
+		homeButton.addEventListener('click', function(evt){
+			evt.preventDefault();
+			evt.stopPropagation();
+
+			if(document.getElementById('musicPanel') === null)
+			{
+				loadMusicPanel(sampleCloud.user);	
+			}
+
+			if(sampleCloud.newSource !== null)
+			{
+				stopAudio(null);	
+			}
+			
+		}, false);
+
+		logoutButton.addEventListener('click', function(evt){
+			evt.preventDefault();
+			evt.stopPropagation();
+
+			for(var key in sampleCloud)
+			{
+				if(sampleCloud.hasOwnProperty(key))
+				{
+					sampleCloud[key] = null;
+				}
+			}
+
+			init();
+		}, false);
 	}
 
 	function validate(evt)
@@ -90,12 +140,14 @@ define([
 		elem.setAttribute("src", "images/loading.gif");
 		// var recorderDiv = document.getElementById('recorder');
 		mainDiv.appendChild(elem);
-		// console.log(div);
+		
 		sampleCloud.login.validate(function (user) {
 			if(user.result === true)
 			{
 				sampleCloud.login.removeLogin(mainDiv);
 				userPanel.style.display = "block";
+				sampleCloud.user = user;
+				userPanelEventListeners();
 				loadMusicPanel(user);
 			}
 			else 
@@ -124,8 +176,12 @@ define([
 
 	function loadMusicPanel(user) 
 	{
-		h1.innerText = 'SELECT AUDIO SOURCE';
 		sampleCloud.musicPanel = new musicPanel();
+		h1.innerText = 'SELECT AUDIO SOURCE';
+		if(document.getElementById('top').style.display === "none")
+		{
+			document.getElementById('top').style.display = "block";
+		}
 		sampleCloud.musicPanel.loadMusicPanel(mainDiv, function (response) {
 			handleMusicPanel(user);
 		});
@@ -159,7 +215,10 @@ define([
 					sampleCloud.charting = new charting();
 					var previewButton = document.getElementById('previewButton');
 					var loadButton = document.getElementById('loadButton');
+					var playButton = document.getElementById('playCloud');
+					var stopButton = document.getElementById('stopCloud');
 					var select = document.getElementById('musicList');
+
 					var currentBuffer = null;
 					var currentTrack = null;
 					var selectedTrack = null;
@@ -169,7 +228,6 @@ define([
 						evt.preventDefault();  //Prevents default action occuring for event occurence
 						selectedTrack = select.value;
 
-						console.log(user);
 						if(currentTrack !== selectedTrack)
 						{
 							var trackDetails = {
@@ -184,9 +242,7 @@ define([
 										currentTrack = selectedTrack;
 										var prev = document.getElementById('previewArea');
 										prev.style.display = 'block';
-										console.log(prev);
 										sampleCloud.charting.lineChart('cloudChart', buffer);
-										console.log(buffer);
 										currentBuffer = buffer;
 									},function(e){"Error with decoding audio data" + e.err});
 								});
@@ -197,10 +253,24 @@ define([
 						}
 					}, false);
 
-					loadButton.addEventListener('click', function(evt) {
+					playButton.addEventListener('click', function(evt) {
+						evt.stopPropagation(); //Prevents further propagation of the current event
+						evt.preventDefault();  //Prevents default action occuring for event occurence	
+						playButton.disabled = true;		
+						playAudio(currentBuffer, 'cloudChart', playButton);
+					});
+
+					stopButton.addEventListener('click', function(evt) {
 						evt.stopPropagation(); //Prevents further propagation of the current event
 						evt.preventDefault();  //Prevents default action occuring for event occurence
 
+						stopAudio(playButton);
+					}, false);
+
+					loadButton.addEventListener('click', function(evt) {
+						evt.stopPropagation(); //Prevents further propagation of the current event
+						evt.preventDefault();  //Prevents default action occuring for event occurence
+						stopAudio();
 						sampleCloud.audioServer.removeAudioServer(document.getElementById('cloudList'));
 						if(currentTrack !== null && currentBuffer !== null)
 						{
@@ -225,14 +295,11 @@ define([
 								});
 							});
 						}
-
-						console.log('Load');
 					}, false);
 
 					console.log(music);
 					var musicList = document.getElementById('musicList');
 					music.forEach(function(track) {
-						console.log(track);
 						var option = document.createElement('option');
 						option.value = track.title;
 						option.innerText = track.title;
@@ -256,13 +323,17 @@ define([
 		 		evt.stopPropagation(); //Prevents further propagation of the current event
 				evt.preventDefault();  //Prevents default action occuring for event occurence
 
+				loadButton.disabled = false;
+				spanDiv.style.color = "black";
+				spanDiv.innerText = "Loading...";
+
 				var fileList = evt.target.files;	//Read fileList from target of event
 				
 				if(fileList.length > 0)
 				{
 					sampleCloud.fileSelection.fileReadToBuff(fileList, function(buffer) {
-						console.log(buffer);
-						if(buffer.length <= 882000)
+						
+						if(buffer.length <= buffer.sampleRate * 20)
 						{
 							loadButton.disabled = false;
 							spanDiv.style.color = "blue";
@@ -274,7 +345,6 @@ define([
 							loadButton.disabled = true;
 							spanDiv.style.color = "red";
 							spanDiv.innerText = fileList[0].name + " Not Allowed! Pick a file with a smaller size";
-							console.log('Not allowed');
 							fileChooserDiv.value = '';
 						}
 					});	//Send fileList to function that will read file contents as array buffer
@@ -284,7 +354,7 @@ define([
 		 	fileDropArea.addEventListener('dragover', function(evt) {
 		 		evt.stopPropagation(); //Prevents further propagation of the current event
 				evt.preventDefault();  //Prevents default action occuring for event occurence
-				console.log('dragover');
+
 				evt.dataTransfer.dropEffect = 'copy'; //Copy file when it is dropped into fileDropArea (default is download)
 		 	}
 		 	, false);
@@ -293,11 +363,15 @@ define([
 		 		evt.stopPropagation(); //Prevents further propagation of the current event
 				evt.preventDefault();  //Prevents default action occuring for event occurence
 
+				loadButton.disabled = false;
+				spanDiv.style.color = "black";
+				spanDiv.innerText = "Loading...";
+
 				var fileList = evt.dataTransfer.files; //Read fileList from data transfer event
 
 				sampleCloud.fileSelection.fileReadToBuff(fileList, function(buffer) { 
-					console.log(fileList[0]);
-					if(buffer.length <= 882000)
+					
+					if(buffer.length <= buffer.sampleRate * 20)
 					{
 						loadButton.disabled = false;
 						spanDiv.style.color = "blue";
@@ -311,12 +385,12 @@ define([
 						spanDiv.style.color = "red";
 						spanDiv.innerText = fileList[0].name + " Not Allowed! Pick a file with a smaller size";
 						fileChooserDiv.value = '';
-						console.log('Not allowed');
 					}
 				});	//Send fileList to function that will read file contents as array buffer
 		 	}, false);	
 
 		 	loadButton.addEventListener('click', function(evt) {
+		 		stopAudio();
 		 		var buffer = sampleCloud.fileSelection.getAudioBuffer();
 		 		loadMainPanel(buffer, null);
 		 	});
@@ -352,6 +426,7 @@ define([
 			var stopRecorder = document.getElementById('recStop');
 			var play = document.getElementById('recPlay');
 			var load = document.getElementById('recLoad');
+			play.disabled = false;
 
 			sampleCloud.charting.lineChart('recorderChart', [0]);
 			//Add event listeners
@@ -364,12 +439,14 @@ define([
 						startRecorder.disabled = true;
 					}
 					else {
+						play.disabled = true;
+						startRecorder.disabled = true;
+						
 						//Read in from audio inputa and add to recording 
 					    sampleCloud.recorder.getJavaScriptNode().onaudioprocess = function (e) {
 					    	sampleCloud.recorder.addToRecordingBuffer(e.inputBuffer);
 					    	sampleCloud.charting.lineChart('recorderChart', e.inputBuffer);
-					    	console.log(sampleCloud.recorder.getRecording().length);
-					    	if(sampleCloud.recorder.getRecording().length > 882000)
+					    	if(sampleCloud.recorder.getRecording().length >= maxTime)
 					    	{
 						    	stopRecorder.click();
 					    	}	
@@ -391,46 +468,20 @@ define([
 				document.getElementById('recorderChart').appendChild(elem);
 				sampleCloud.charting.lineChart('recorderChart', sampleCloud.recorder.getAudioBuffer().getChannelData(0));
 				recorderChart = document.getElementById('recorderChart');
-				console.log(sampleCloud.recorder.getAudioBuffer());
 			}, false); //Start recording when button pressed
 
 			play.addEventListener('click', function(evt) {
 				evt.stopPropagation(); //Prevents further propagation of the current event
 				evt.preventDefault();  //Prevents default action occuring for event occurence
-				var newSource = sampleCloud.audioContext.createBufferSource(); //Create new buffer source
-				newSource.buffer = sampleCloud.recorder.getAudioBuffer();
-				newSource.connect(sampleCloud.audioContext.destination); //Connect to output (speakers)
-
-				//Connect a javascript node so that we can draw chart when audio is being played
-				var javascriptNode = sampleCloud.audioContext.createScriptProcessor(1024, 1, 1); //16384 buffer size = high quality
-				javascriptNode.connect(sampleCloud.audioContext.destination);
-				newSource.start(0); //plays the contents of the wav
-
-				var j = 0;
-				tempChannelData = newSource.buffer.getChannelData(0);
-
-			   	javascriptNode.onaudioprocess = function (e) {
-			   		//Extract 1024 size sample to send to chart
-		   			if(j < tempChannelData.length - 1024)
-		   			{
-				   		var tempBuff = [];
-				   		for(var i = 0; i < 1024; i++){
-			   				tempBuff[i] = tempChannelData[i+j];
-		   					j++;	
-				   		}
-				    	sampleCloud.charting.lineChart('recorderChart', tempBuff);
-			    	}
-			    }	
-			    newSource.onended = function()
-			    {
-			    	sampleCloud.charting.lineChart('recorderChart', tempChannelData);
-			    }
+				play.disabled = true;
+				playAudio(sampleCloud.recorder.getAudioBuffer(), 'recorderChart');
 			}, false); //Start recording when button pressed	
 
 
 			load.addEventListener('click', function(evt) {
 				evt.stopPropagation(); //Prevents further propagation of the current event
 				evt.preventDefault();  //Prevents default action occuring for event occurence
+				stopAudio(play);
 				sampleCloud.recorder.removeRecorder(document.getElementById('recorder'));
 				loadMainPanel(sampleCloud.recorder.getAudioBuffer(), recorderChart);
 			}, false);	
@@ -440,11 +491,15 @@ define([
 	function loadMainPanel(buffer, chartDiv)
 	{
 		$('#top').hide();
-		console.log(buffer);
 		sampleCloud.mainPanel = new mainPanel();
 		sampleCloud.charting = new charting();
 		sampleCloud.audioEncode = new audioEncode();
+
 		sampleCloud.mainPanel.loadMainPanel(mainDiv, function() {
+			var playButton = document.getElementById('mainPlay');
+			var stopButton = document.getElementById('mainStop');
+			var resetButton = document.getElementById('mainReset');
+			var saveForm = document.getElementById('saveForm');
 
 			if(chartDiv !== null)
 			{
@@ -455,13 +510,133 @@ define([
 				sampleCloud.charting.lineChart('mainChart', buffer);
 			}
 
-			// sampleCloud.audioEncode.wavEncode(buffer, 1, 44100, function(response) {
-			// 	console.log(response);
-			// });
+			playButton.addEventListener('click', function(evt) {
+				evt.stopPropagation(); //Prevents further propagation of the current event
+				evt.preventDefault();  //Prevents default action occuring for event occurence
 
-			// sampleCloud.audioEncode.mp3Encode(buffer, 1, 1, 44100, 128, buffer.length, function(response) {
-			// 	console.log(response);
-			// });
+				playButton.disabled = true;
+				playAudio(sampleCloud.recorder.getAudioBuffer(), 'mainChart', playButton);
+			}, false); //Start recording when button pressed	
+
+			stopButton.addEventListener('click', function(evt) {
+				evt.stopPropagation(); //Prevents further propagation of the current event
+				evt.preventDefault();  //Prevents default action occuring for event occurence
+
+				stopAudio(playButton);
+			}, false);
+
+			saveForm.addEventListener('submit', function(evt) {
+				evt.preventDefault();
+				evt.stopPropagation();
+				var saveForm = document.forms['saveForm'];
+				var trackname = saveForm['tracknameInput'].value;
+				var channels = saveForm['channels'].value;
+				var format = saveForm['format'].value;
+
+
+
+				if(format === 'WAV')
+				{
+					sampleCloud.audioEncode.wavEncode(buffer.getChannelData(0), channels, sampleCloud.audioContext.sampleRate , function(blob) {
+				    	var fileReader = new FileReader()	//Create new file reader
+						var fileToArrayBuffer = fileReader.readAsArrayBuffer(blob); //Read file contents as array buffer
+
+						//Decode file array buffer contents as audio buffer
+						fileReader.onload = function() {
+							var arrayBuffer = fileReader.result;
+							sampleCloud.audioContext.decodeAudioData(fileReader.result, function(buffer){
+
+							});
+						}	
+				    	//Create download 
+				       	var URL = window.URL || window.webkitURL;
+				        var downloadUrl = URL.createObjectURL(blob);
+					    var a = document.createElement("a");
+					    a.href = downloadUrl;
+					    a.download = trackname + '.wav';
+					    document.body.appendChild(a);
+					    a.click(); 
+					});
+				}
+				else{
+					var bitrate = format === 'MP3_128' ? 128
+						: format === 'MP3_192' ? 192
+						: format === 'MP3_320' ? 320
+						: null;
+
+					sampleCloud.audioEncode.mp3Encode(buffer.getChannelData(0), 1, channels, sampleCloud.audioContext.sampleRate, bitrate, buffer.length, function(response) {
+				    	//Create download 
+				    	console.log(response);
+
+				       	var URL = window.URL || window.webkitURL;
+				        var downloadUrl = URL.createObjectURL(response);
+					    var a = document.createElement("a");
+					    a.href = downloadUrl;
+					    a.download =  trackname + '.mp3'
+					    document.body.appendChild(a);
+					   // a.click(); 
+					});
+				}
+				console.log(trackname + " " + channels + " " + format);
+			}, false);
+
+
+
+
 		});
+	}
+
+	function playAudio(buffer, chartDiv, div)
+	{
+		sampleCloud.newSource = sampleCloud.audioContext.createBufferSource(); //Create new buffer source
+		sampleCloud.newSource.buffer = buffer;
+		sampleCloud.newSource.connect(sampleCloud.audioContext.destination); //Connect to output (speakers)
+
+		//Connect a javascript node so that we can draw chart when audio is being played
+		var javascriptNode = sampleCloud.audioContext.createScriptProcessor(2048, 1, 1); //16384 buffer size = high quality
+		javascriptNode.connect(sampleCloud.audioContext.destination);
+		sampleCloud.newSource.start(0); //plays the contents of the wav
+
+		var j = 0;
+		tempChannelData = sampleCloud.newSource.buffer.getChannelData(0);
+		var tempBuff = [];
+		var length = tempChannelData.length;
+		
+	   	javascriptNode.onaudioprocess = function (e) {
+	   		if(sampleCloud.newSource !== null)
+	   		{
+		   		if(j < length - 2048) //Don't draw last frame
+		   		{
+			   		tempBuff = tempChannelData.subarray(j, j+2048);
+					j += 2048;	
+			    	sampleCloud.charting.lineChart(chartDiv, tempBuff);	
+		   		}	
+	   		}
+	    }	
+
+	    sampleCloud.newSource.onended = function()
+	    {
+	    	//Loading gif add
+	    	sampleCloud.charting.lineChart(chartDiv, tempChannelData);
+	    	sampleCloud.newSource = null;
+	    	if(div !== null)
+	    	{
+	    		div.disabled = false;
+	    	}
+	    	
+	    }
+	}
+
+	function stopAudio(div)
+	{
+		if(sampleCloud.newSource !== null)
+		{
+			sampleCloud.newSource.stop();	
+			sampleCloud.newSource = null;
+			if(div !== null)
+			{
+				div.disabled = false;
+			}
+		}
 	}
 });

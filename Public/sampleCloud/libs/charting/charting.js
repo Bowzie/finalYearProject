@@ -21,7 +21,16 @@ define(function () {
                 }
                 
                 var j = 0;
-                for(var i = 0; i < inputData.length; i+=16)
+                var step = 4;
+                if(inputData.length > 1024 && inputData.length <= 2048)
+                {
+                    step = 16;
+                }
+                else if(inputData.length > 2048)
+                {
+                    step = 16;
+                }
+                for(var i = 0; i < inputData.length; i+=step)
                 {
                     data[j] = inputData[i] + 1;  
                     j++;  
@@ -42,8 +51,11 @@ define(function () {
 
                     //Clear graph
                     var div = document.getElementById(id);
-                    div.innerHTML = "";
-
+                    if(div !== null)
+                    {
+                        div.innerHTML = "";    
+                    }
+                    
                     //Add svg to graph
                     var graph = d3.select('#' + id).append("svg:svg")
                           .attr("width", w + m[1] + m[3])

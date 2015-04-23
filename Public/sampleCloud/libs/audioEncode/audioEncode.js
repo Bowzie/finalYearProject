@@ -9,6 +9,7 @@ define(function () {
         wavEncode: function (data, numChannels, samplerate, callback) {
             require(['wavEncoder'], function(){
                 console.log('Starting WAV Encode, ' + numChannels + ' channels @ ' + samplerate );
+                console.log(data);
                 var options = {   
                     sampleRateHz: samplerate,
                     numChannels: numChannels,
@@ -25,9 +26,10 @@ define(function () {
                 for(var i = 0; i < binary.length; i++) {
                     array.push(binary.charCodeAt(i));
                 }
-
+                
+                var wavData = new Uint8Array(array);
                 // //Make blob of audio (new file)
-                var blob = new Blob([new Uint8Array(array)], { type: 'audio/wav' });
+                var blob = new Blob([wavData], { type: 'audio/wav' });
 
                 console.log('Done encoding wav');
 
@@ -37,13 +39,14 @@ define(function () {
         //2 Channels ONLY
         mp3Encode: function (data, mode, numChannels, samplerate, bitrate, dataLength, callback) {
             require(['mp3Encoder'], function(){
-                console.log('Start MP3 encoding ' + numChannels + ' channels @ ' + samplerate + ' , bitrate ' + bitrate + 'kbps');
+                console.log('Start MP3 encoding ' + numChannels + ' channel(s) @ ' + samplerate + ' , bitrate ' + bitrate + 'kbps');
                 console.log(dataLength);
-                if(numChannels === 1)
-                {
-                    data.left = data;
-                    data.right = data;
-                }
+
+                // if(numChannels == 1) 
+                // {
+                //     data.left = data;
+                //     data.right = data;
+                // }
 
                 var mp3codec = Lame.init();
                 Lame.set_mode(mp3codec, mode);
@@ -51,12 +54,10 @@ define(function () {
                 Lame.set_out_samplerate(mp3codec, samplerate);
                 Lame.set_bitrate(mp3codec, bitrate);
                 Lame.init_params(mp3codec);
-
-                var mp3data = Lame.encode_buffer_ieee_float(mp3codec, data.left, data.right, dataLength);
+                var mp3data = Lame.encode_buffer_ieee_float(mp3codec, data, data, dataLength);
 
                 var blob = new Blob([mp3data.data], { type: 'audio/mp3' });
 
-                console.log(mp3data.data);
                 console.log('Done MP3 encoding');
 
                 callback(blob);

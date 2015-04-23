@@ -14,18 +14,18 @@
 				<button id="mainReset">Reset</button> <br>
 				<form id="saveForm" style="margin-top:50px; margin-left: 50px;">
 					<label>Track Name :</label>
-					<input type="text" required/>
+					<input type="text" id="tracknameInput" required/>
 					<select name="format" required>
 						<option value="">Format</option>
 						<option value="WAV">WAV</option>
 						<option value="MP3_128">MP3 128Kbps</option>
-						<option value="MP3_256">MP3 256Kbps</option>
+						<option value="MP3_192">MP3 192Kbps</option>
 						<option value="MP3_320">MP3 320Kbps</option>
 					</select>
-					<select name="Channels" required>
+					<select name="channels" required>
 						<option value="">Channels</option>
-						<option value="CH1">1</option>
-						<option value="CH2">2</option>
+						<option value="1">1</option>
+						<option value="2">2</option>
 					</select>
 					<button id="mainSave">Save</button>
 				</form>

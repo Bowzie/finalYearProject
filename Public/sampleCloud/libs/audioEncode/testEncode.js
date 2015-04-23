@@ -14,7 +14,7 @@ define([
 
 	wavButton.addEventListener('click', encodeWav, false);
 	mp3Button.addEventListener('click', mp3Start, false);
-	mp3Button.click();
+	wavButton.click();
 
 	function encodeWav(evt) //MAX CHANNELS APPEARS TO BE 5 FROM TESTING, CRASHES WITH TOO MUCH DATA 8.6 million samples max
 	{	
@@ -60,7 +60,17 @@ define([
 				}
 				var encoder = new audioEncode();
 				encoder.wavEncode(data, numChannels, buffer.sampleRate,  function(blob) {
-					download(blob, 'wav');					
+			    	var fileReader = new FileReader()	//Create new file reader
+					var fileToArrayBuffer = fileReader.readAsArrayBuffer(blob); //Read file contents as array buffer
+
+					//Decode file array buffer contents as audio buffer
+					fileReader.onload = function() {
+						var arrayBuffer = fileReader.result;
+						audioContext.decodeAudioData(fileReader.result, function(buffer){
+							console.log(buffer);
+							console.log(buffer.getChannelData(0));
+						});
+					}				
 				});
 
 

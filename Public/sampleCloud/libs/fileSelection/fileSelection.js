@@ -7,7 +7,6 @@ define(function () {
     fileSelection.prototype = {
     	audioBuffer: null,
 
-		//Initialise fileChooser and fileDropArea
 		getAudioBuffer: function()
 		{
 			return this.audioBuffer;
