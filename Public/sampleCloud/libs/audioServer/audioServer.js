@@ -6,6 +6,20 @@ define(function () {
 
     AudioServer.prototype = {
     	audioBuffer: null,
+    	loadAudioServer: function(div, callback)
+		{
+			require(['jquery'], function($) {
+				$(div).load('libs/audioServer/audioServer.html', function() {
+					callback(true);
+				});
+			});
+		},
+
+		removeAudioServer: function(div)
+		{
+			div.parentNode.removeChild(div);
+		},
+
     	getTrackList: function(id, callback) {
     		require(['jquery'], function($) {
     			var userId = {
@@ -67,12 +81,8 @@ define(function () {
 			xmlHttpGet.open("Get", trackPath, true); 
 			xmlHttpGet.responseType = "arraybuffer"; //arraybuffer = raw binary data
 
-			//Decode audio and set to buffer
 			xmlHttpGet.onload = function() {
 				callback(xmlHttpGet.response);
-				// audioContext.decodeAudioData(xmlHttpGet.response, function(buffer){
-				// 	audioBuffer = buffer;
-				// },function(e){"Error with decoding audio data" + e.err});
 			}
 
 			xmlHttpGet.send();

@@ -54,10 +54,8 @@ h1 {
 	outline: none;
 }
 
-#logoutButton {
-	position:fixed;
-	right:10px;
-	top:5px;
+#logoutButton, #homeButton, #profileButton {
+
 	font-family: Arial;
 	color: #0ca3d2;
 	font-size: 20px;

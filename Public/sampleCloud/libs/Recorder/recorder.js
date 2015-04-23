@@ -10,6 +10,7 @@ define(function () {
 		sourceNode: null,
 		recording: null,
 		audioBuffer: null,
+		
 		loadRecorder: function(div, callback)
 		{
 			require(['jquery'], function($) {

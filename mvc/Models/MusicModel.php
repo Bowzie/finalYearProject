@@ -24,7 +24,7 @@ class MusicModel extends Model
 	public static function getTrackPath($args)
 	{
 		$queryParams = 'path';
-		$whereClause = 'title = ' . "'" . $args['trackname'] . "'" . ' AND ' . '_userid = ' . "'" . $args['_userId'] . "'";
+		$whereClause = 'title = ' . "'" . $args['trackname'] . "'" . ' AND ' . '_userid = ' . "'" . $args['id'] . "'";
 		return Model::executeSelectQuery(MusicModel::$table, $queryParams, $whereClause);
  	}
 

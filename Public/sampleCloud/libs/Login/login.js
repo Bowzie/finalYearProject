@@ -24,7 +24,6 @@ define(function () {
     	validate : function(callback) {
     		require(['jquery'], function($) {
 
-				console.log('validating');
 				var userDetails = {
 					functionName: 'login',
 					username: document.getElementById('usernameLogin').value,

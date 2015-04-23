@@ -1,5 +1,6 @@
 @import url('libs/login/login.css');
 @import url('libs/register/register.css');
+@import url('libs/mainPanel/mainPanel.css');
 @import url('libs/musicPanel/musicPanel.css');
 @import url('libs/recorder/recorder.css');
 @import url('libs/fileSelection/fileSelection.css');
@@ -9,6 +10,7 @@ body {
   color: #404040;
   background: #0ca3d2;
   outline: none;
+  /*overflow: scroll;*/
 }
 
 img {
@@ -65,10 +67,15 @@ path {
 }
 
 .y.axis line, .y.axis path {
-  fill: none;
-  stroke: #000;
+	fill: none;
+	stroke: #000;
 }
 
 .y.axis text {
 	/*display:none;*/
+}
+
+:disabled {
+	/*opacity: 0.65; */
+	cursor: not-allowed;
 }

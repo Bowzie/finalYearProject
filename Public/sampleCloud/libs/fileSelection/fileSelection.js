@@ -5,7 +5,7 @@ define(function () {
     }
 
     fileSelection.prototype = {
-    	audioBuffer: {},
+    	audioBuffer: null,
 
 		//Initialise fileChooser and fileDropArea
 		getAudioBuffer: function()
@@ -65,7 +65,6 @@ define(function () {
 		//Read file contents as array buffer //ADD CALLBACKS
 		fileReadToBuff: function(fileList, callback) 
 		{
-			console.log("Hey");
 			//TODO check if audio context works in browser
 			var audioContext = new AudioContext(); //Create new audio context 
 			var fileReader = new FileReader()	//Create new file reader

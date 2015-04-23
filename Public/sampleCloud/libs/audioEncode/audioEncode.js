@@ -7,8 +7,8 @@ define(function () {
     audioEncode.prototype = {   
         //MAX DATA SIZE 8600000 (5 CHANNELS MAX)
         wavEncode: function (data, numChannels, samplerate, callback) {
-            require(['wavEncoder', 'riffwave'], function(){
-                console.log('Starting WAV Encode, ' + numChannels + ' channels @ ' + samplerate);
+            require(['wavEncoder'], function(){
+                console.log('Starting WAV Encode, ' + numChannels + ' channels @ ' + samplerate );
                 var options = {   
                     sampleRateHz: samplerate,
                     numChannels: numChannels,
@@ -38,6 +38,12 @@ define(function () {
         mp3Encode: function (data, mode, numChannels, samplerate, bitrate, dataLength, callback) {
             require(['mp3Encoder'], function(){
                 console.log('Start MP3 encoding ' + numChannels + ' channels @ ' + samplerate + ' , bitrate ' + bitrate + 'kbps');
+                console.log(dataLength);
+                if(numChannels === 1)
+                {
+                    data.left = data;
+                    data.right = data;
+                }
 
                 var mp3codec = Lame.init();
                 Lame.set_mode(mp3codec, mode);

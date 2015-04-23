@@ -10,9 +10,9 @@ define(function () {
             var d3 = require(['d3'], function(d3) {
 
                 // define dimensions of graph
-                var m = [80, 80, 80, 80]; // margins
-                var w = 1000 - m[1] - m[3]; // width
-                var h = 400 - m[0] - m[2]; // height
+                var m = [60, 30, 60, 80]; // margins
+                var w = 800 - m[1] - m[3]; // width
+                var h = 300 - m[0] - m[2]; // height
                 var data = [];
 
                 if(inputData instanceof AudioBuffer)
