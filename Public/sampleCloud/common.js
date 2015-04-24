@@ -3,7 +3,7 @@ require.config({
     paths: {    //Commonly used scripts
         jquery: 'thirdPartyLibs/jquery-min',
         d3: 'thirdPartyLibs/d3.min',
-        mp3Encoder: 'thirdPartyLibs/libmp3lame',
+        mp3Encoder: 'thirdPartyLibs/libmp3lame.min',
         wavEncoder: 'thirdPartyLibs/wavencoder',
         audioEncode: 'sampleCloud/libs/audioEncode/audioEncode',
         audioServer: 'sampleCloud/libs/audioServer/audioServer',

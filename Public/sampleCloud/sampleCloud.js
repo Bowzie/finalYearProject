@@ -515,7 +515,7 @@ define([
 				evt.preventDefault();  //Prevents default action occuring for event occurence
 
 				playButton.disabled = true;
-				playAudio(sampleCloud.recorder.getAudioBuffer(), 'mainChart', playButton);
+				playAudio(buffer, 'mainChart', playButton);
 			}, false); //Start recording when button pressed	
 
 			stopButton.addEventListener('click', function(evt) {
@@ -534,10 +534,18 @@ define([
 				var format = saveForm['format'].value;
 
 
+				if(buffer instanceof AudioBuffer)
+				{
+					bufferData = buffer.getChannelData(0);
+				}
+				else
+				{
+					bufferData = buffer;
+				}
 
 				if(format === 'WAV')
 				{
-					sampleCloud.audioEncode.wavEncode(buffer.getChannelData(0), channels, sampleCloud.audioContext.sampleRate , function(blob) {
+					sampleCloud.audioEncode.wavEncode(bufferData, channels, sampleCloud.audioContext.sampleRate , function(blob) {
 				    	var fileReader = new FileReader()	//Create new file reader
 						var fileToArrayBuffer = fileReader.readAsArrayBuffer(blob); //Read file contents as array buffer
 
@@ -564,7 +572,7 @@ define([
 						: format === 'MP3_320' ? 320
 						: null;
 
-					sampleCloud.audioEncode.mp3Encode(buffer.getChannelData(0), 1, channels, sampleCloud.audioContext.sampleRate, bitrate, buffer.length, function(response) {
+					sampleCloud.audioEncode.mp3Encode(bufferData, 1, channels, sampleCloud.audioContext.sampleRate, bitrate, buffer.length, function(response) {
 				    	//Create download 
 				    	console.log(response);
 
@@ -574,7 +582,7 @@ define([
 					    a.href = downloadUrl;
 					    a.download =  trackname + '.mp3'
 					    document.body.appendChild(a);
-					   // a.click(); 
+					   	a.click(); 
 					});
 				}
 				console.log(trackname + " " + channels + " " + format);
