@@ -72,10 +72,33 @@ path {
 }
 
 .y.axis text {
-	/*display:none;*/
+	display:none;
 }
 
 :disabled {
 	/*opacity: 0.65; */
 	cursor: not-allowed;
+}
+
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
+.axis {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
 }

@@ -31,6 +31,30 @@ define(function () {
 			div.parentNode.removeChild(div);
 		},
 
+		checkTrackName: function(id, trackname, callback) {
+			require(['jquery'], function($) {
+    			var userId = {
+    				functionName: 'checkTrackName',
+					_userId: id,
+					title: trackname
+				}	
+
+				$.ajax({
+					type: "POST",
+					url: '/../finalYearProject/mvc/Controllers/Music.php',
+					data: JSON.stringify(userId),
+					dataType: 'json',
+					contentType: 'application/json; charset=UTF-8',
+					success: function(result) {
+						callback(result);	
+					},
+					error: function(err) {
+						callback(err);
+					}
+				});
+    		});
+		},
+
     	getTrackList: function(id, callback) {
     		require(['jquery'], function($) {
     			var userId = {
@@ -57,7 +81,7 @@ define(function () {
     		require(['jquery'], function() {
     			var track = {
     				functionName: 'getTrackPath',
-    				id: trackDetails.userId,
+    				_userId: trackDetails.userId,
     				username: trackDetails.username,
     				trackname: trackDetails.trackname
     			}
@@ -77,7 +101,6 @@ define(function () {
     		});
     	},
     	getTrack: function(trackPath, callback) {
-    		console.log(trackPath);
     		//Not using ajax as arraybuffer is desired response type 
 			var xmlHttpGet = new XMLHttpRequest();
 			xmlHttpGet.open("Get", trackPath, true); 
@@ -89,15 +112,14 @@ define(function () {
 
 			xmlHttpGet.send();
     	},
-    	addTrack: function(blob, username, callback) {
+    	addTrack: function(blob, trackname, username, callback) {
     		require(['jquery'], function() {
     			var formData = new FormData();
     			var textblob = new Blob([], { type: 'text' });
 
-    			formData.append('file[0]', blob, 'bleh.wav'); 
+    			formData.append('file[0]', blob, trackname); 
 				formData.append('file[1]', textblob, username); //Kind of a hack
 
-    			console.log(formData);
     			$.ajax({
     				type: "POST",
 					url: '/../finalYearProject/mvc/Controllers/Music.php',
@@ -154,7 +176,7 @@ define(function () {
     				title: userDetails.title,
     				path: userDetails.path
     			}
-    			console.log(newDbEntry);
+    			
 				$.ajax({
 					type: "POST",
 					url: '/../finalYearProject/mvc/Controllers/Music.php',

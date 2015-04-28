@@ -2,66 +2,69 @@
 	margin-top: 100px;
 	margin-left: 10%;
 	width: 80%;
+
 }
 
 #mainWrapper { 
 	background: white;
 	overflow: hidden; 
+	border-radius: 8px;
 }
 
-#left-content { margin-right: 10px; overflow: hidden; width: 70%; float: left; }
+#left-content { 
+	margin-right: 10px; overflow: hidden; width: 70%; float: left; 
+}
 
-#div1 { height: 300px;   }
-#div2 { height: 300px; margin-top: 20px; }
+#div1 { 
+	height: 300px;   #
+}
 
-#div3 {  }
+#div2 { 
+	height: 300px; margin-top: 20px; 
+}
 
-#sddm
-{	margin: 0;
-	padding: 0;
-	z-index: 30}
+#div3 {  
+}
 
-#sddm li
-{	margin: 0;
-	padding: 0;
-	list-style: none;
-	float: left;
-	font: bold 11px arial}
+#mainButtons {
+	margin-left: 100px;
+}
 
-#sddm li a
-{	display: block;
-	margin: 0 1px 0 0;
-	padding: 4px 10px;
-	width: 60px;
-	background: #5970B2;
-	color: #FFF;
-	text-align: center;
-	text-decoration: none}
+#dspPanel {
+	display: none;
+}
+#dspSelect {
+	margin-bottom: 20px;
+}
+#viewSelect, #biquadSelect1, #biquadSelect2, #biquadSelect3 {
+	margin-left: 20px;
+}
 
-#sddm li a:hover
-{	background: #49A3FF}
+#warningSpan {
+	color: red;
+}
 
-#sddm div
-{	position: absolute;
-	visibility: hidden;
-	margin: 0;
-	padding: 0;
-	background: #EAEBD8;
-	border: 1px solid #5970B2}
+#biquadSelect1, #biquadSelect2, #biquadSelect3 {
+	display: none;
+	margin-top: 30px;
+}
 
-	#sddm div a
-	{	position: relative;
-		display: block;
-		margin: 0;
-		padding: 5px 10px;
-		width: auto;
-		white-space: nowrap;
-		text-align: left;
-		text-decoration: none;
-		background: #EAEBD8;
-		color: #2875DE;
-		font: 11px arial}
+#applyDsp {
+	display: none;
+	margin-left: 20px;
+	margin-top: 30px;
+}
 
-	#sddm div a:hover
-	{	background: #49A3FF;
-		color: #FFF}
+#dspSpan {
+	color: red;
+}
+
+#mainSaveUploadSpan {
+	margin-left: 200px;
+	font-size: 22px;
+}
+
+input[type="range"] {
+	margin-top: 30px;
+	margin-left: 30px;
+}

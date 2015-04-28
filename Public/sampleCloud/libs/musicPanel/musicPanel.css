@@ -1,6 +1,7 @@
 #musicPanel {
 	text-align: center;
 	margin: auto;
+	margin-left: 400px;
 }
 
 #cloud, #upload, #recorderPanel {

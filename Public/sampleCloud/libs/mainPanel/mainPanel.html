@@ -2,16 +2,24 @@
 	<div id="mainWrapper">
 		<div id="left-content">
 	        <div id="div1">
-	        	<select name="View" required>
-						<option value="view1">Normal View</option>
-						<option value="view2">Spectrogram</option>
+	        	<select name="viewSelect" id="viewSelect" required>
+						<option value="normal">Normal View</option>
+						<option value="spectLine">Spectrogram (line)</option>
+						<option value="spectBar">Spectral (bar)</option>
 				</select>
+				<select name="channelSelect" id="channelSelect" required>
+						<option value="1">Channel 1</option>
+						<option value="2">Channel 2</option>
+				</select>
+				<span id="warningSpan">* Warning: Some effects may make audio very loud!</span>
 	        	<div id="mainChart"></div>
 	        </div>
 	        <div id="div2">
-		        <button id="mainPlay">Play</button>
-				<button id="mainStop">Stop</button> 
-				<button id="mainReset">Reset</button> <br>
+	        	<div id="mainButtons">
+			        <button id="mainPlay">Play</button>
+					<button id="mainStop">Stop</button> 
+					<button id="mainReset">Reset</button> <br>
+				</div>
 				<form id="saveForm" style="margin-top:50px; margin-left: 50px;">
 					<label>Track Name :</label>
 					<input type="text" id="tracknameInput" required/>
@@ -26,24 +34,89 @@
 						<option value="">Channels</option>
 						<option value="1">1</option>
 						<option value="2">2</option>
-					</select>
-					<button id="mainSave">Save</button>
+					</select> 
+					<input type="checkbox" name="download" value="download">Download</input>
+					<button id="mainSave">Save</button> <br><br>
+					<span id="mainSaveUploadSpan"></span>
 				</form>
 	        </div>
-    	</div>    
-	    <div id="div3">
-	        <ul id="sddm">
-    <li><a href="#" 
-        onmouseover="mopen('m1')" 
-        onmouseout="mclosetime()">Home</a>
-        <div id="m1" 
-            onmouseover="mcancelclosetime()" 
-            onmouseout="mclosetime()">
-        <a href="#">HTML/CSS</a>
-        <a href="#">DHTML Menu</a>
-        <a href="#">JavaScript</a>
-        </div>
-    </li>
+    	</div>   
+    	<div id="div3"> 
+	    	<select name="dspSelect" id="dspSelect" required>
+				<option value="">Filters and Effects</option>
+				<option value="1">ADSR</option>
+				<option value="2">Biquad (2 types)</option>
+				<!-- <option value="3">Biquad2</option> -->
+				<option value="4">Biquad (7 types)</option>
+				<option value="5">Bit crusher</option>
+				<option value="6">Decimator</option>
+				<option value="7">Delay1</option>
+				<option value="8">Delay2</option>
+				<option value="9">Distortion</option>
+				<option value="10">Distortion w/ FoldBack</option>
+				<option value="11">Flanger</option>
+				<option value="12">Fuzz</option>
+				<option value="13">Gain</option>
+				<option value="14">Limiter</option>
+				<option value="15">Moog</option>
+				<option value="16">Overdrive</option>
+				<option value="17">Wah Wah</option> 
+			</select> <br>
+			<div id="dspPanel">
+				<select name="biquadSelect1" id="biquadSelect1" required>
+					<option value="">Filter type</option>
+					<option value="LPF">Lowpass</option>
+					<option value="HPF">Highpass</option>	
+				</select>
+				<select name="biquadSelect2" id="biquadSelect2" required>
+					<option value="">Filter type</option>
+					<option value="LPF">Lowpass</option>
+					<option value="HPF">Highpass</option>	
+					<option value="BPF">Bandpass</option>	
+					<option value="NOTCH">Notch</option>	
+					<option value="PEQ">Parametric EQ</option>
+					<option value="LSH">Low Shelf</option>
+					<option value="HSH">High Shelf</option>
+				</select>
+				<select name="biquadSelect3" id="biquadSelect3" required>
+					<option value="">Filter type</option>
+					<option value="LPF">Lowpass</option>
+					<option value="HPF">Highpass</option>	
+					<option value="BPF">Bandpass</option>	
+					<option value="NOTCH">Notch</option>
+					<option value="PEAK">Peak</option>
+					<option value="LSH">Low Shelf</option>
+					<option value="HSH">High Shelf</option>
+				</select>
+				<form id="range1" oninput="amount.value=rangeInput1.value">
+					<label id="labelRangeInput1"></label>
+		    		<input type="range" id="rangeInput1" name="rangeInput1" min="0" max="100" step="0.1" >
+		        	<output name="amount" for="rangeInput1"></output>
+	        	</form>
+				<form id="range2" oninput="amount.value=rangeInput2.value">
+					<label id="labelRangeInput2"></label>
+		    		<input type="range" id="rangeInput2" name="rangeInput2" min="0" max="100" step="0.1">                            
+		        	<output name="amount" for="rangeInput2"></output>
+	        	</form>
+				<form id="range3" oninput="amount.value=rangeInput3.value">
+					<label id="labelRangeInput3"></label>
+		    		<input type="range" id="rangeInput3" name="rangeInput3" min="0" max="100" step="0.1">                                               
+		        	<output name="amount" for="rangeInput3"></output>
+		        	</form>
+				<form id="range4" oninput="amount.value=rangeInput4.value">
+					<label id="labelRangeInput4"></label>
+		    		<input type="range" id="rangeInput4" name="rangeInput4" min="0" max="100" step="0.1">                          
+		        	<output name="amount" for="rangeInput4"></output>
+	        	</form>
+				<form id="range5" oninput="amount.value=rangeInput5.value">
+					<label id="labelRangeInput5"></label>
+		    		<input type="range" id="rangeInput5" name="rangeInput5" min="0" max="100" step="0.1">             
+		        	<output name="amount" for="rangeInput5"></output>
+	        	</form>
+				<button id="applyDsp">Apply!</button> <br>
+				<span id="dspSpan"></span>
+			</div>
+			</div>
 	    </div>
 	</div>
 </div>

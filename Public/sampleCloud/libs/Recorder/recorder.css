@@ -9,25 +9,26 @@ body {
 	display: inline-block;
 	position: relative;
 	/*margin: 10% auto;*/
-	padding: 20px;
+	/*padding: 20px;*/
 	min-width: 900px;
 	min-height: 400px;
 	background: white;
 	border-radius: 10px;
 	left: 18%;
 }
+#recPanel {
+	margin-left: 100px;
+}
 
-
-
+#recSpan {
+	margin-left: 20px;
+	color: red;
+}
 h2, p {
 	clear: left;
 	text-align: left;
 	display: inline-block;
 	float: right;
-}
-canvas {
-	/*display: none;*/
-	width: 700px;
 }
 
 p {

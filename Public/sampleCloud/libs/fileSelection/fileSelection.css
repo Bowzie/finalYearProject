@@ -34,10 +34,11 @@ body {
 
 #drop {
 	display: inline-block;
+	clear: left;
 	float: left;
-	margin-left: 25px;
+	margin: 25px;
 	height: 400px;
-	width: 300px;
+	width: 500px;
 	border: 1px dashed;
 	border-radius: 5px;
 	padding: 25px;
@@ -48,6 +49,10 @@ input[type=file] {
 	margin-left: 10px;
 	position: relative;
 	z-index: 2;
+}
+
+#loadFileSelector, #spanFileSelector {
+	float: right;
 }
 
 input[type=file]:focus {
@@ -67,7 +72,7 @@ canvas {
 button, input[type="button"] {
 	background: #0ca3d2;
 	margin-top: 15px;
-	margin-left: 100px;
+	margin-left: 10px;
 	border-radius: 8px;
 	font-family: Arial;
 	color: #ffffff;

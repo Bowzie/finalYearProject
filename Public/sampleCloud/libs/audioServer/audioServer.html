@@ -1,11 +1,14 @@
-<div id="cloudList" style="width:800px; height: 600px; background:white; margin-left: 400px; text-align:center; border-radius:8px;">
-	<h1>Your tracks stored on SampleCloud</h1> <br>
+<div id="cloudList" style="width:800px; height: 400px; background:white; margin-left: 400px; text-align:center; border-radius:8px;">
 	<select id="musicList">
 	</select>
-	<button id="previewButton">Preview</button>
-	<button id="loadButton">Load</button>
+	<div id="cloudButtons">
+		<button id="previewCloud">Preview</button>
+		<button id="loadCloud">Load</button>
+		<button id="delCloud">Delete</button>
+	</div>
+	<span id="spanCloud" style="display:none;color:red"></span>
 	<div style="clear: both;"></div>
-	<div id="previewArea" style="display:none;">
+	<div id="previewArea" style="display:none; text-align:center;">
 		<button id="playCloud" style="float:left;">Play</button>
 		<button id="stopCloud" style="float:left;">Stop</button>
 		<div id="cloudChart"></div> <br>

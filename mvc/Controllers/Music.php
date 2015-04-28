@@ -26,6 +26,8 @@ class Music extends Controller
 			
 			switch($args['functionName'])
 			{
+				case 'checkTrackName': $this->checkTrackName($args);
+				break;
 				case 'getTrackList': $this->getTrackList($args);
 				break;
 				case 'getTrackPath': $this->getTrackPath($args);
@@ -49,8 +51,23 @@ class Music extends Controller
 			$result['error'] = 'Error';
 			echo json_encode($result);
 		}
-		
+	}
 
+	private function checkTrackName($args)
+	{
+		$musicModel = new MusicModel();
+		$music = $musicModel->getTrackName($args);
+
+		if($music === null)
+		{
+			$result['result'] = false;
+			echo json_encode($result);
+		}
+		else
+		{
+			$result['result'] = true;
+			echo json_encode($result);
+		}		
 	}
 
 	private function getTrackList($args)
