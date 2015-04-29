@@ -24,7 +24,6 @@ define(function () {
 
     	register: function(callback) {
     		require(['jquery'], function($) {
-				//display register form
 				//add event listener to button click
 				console.log('Checking if username exists on db');
 				var userDetails = {
@@ -39,11 +38,11 @@ define(function () {
 					dataType: 'json',
 					contentType: 'application/json; charset=UTF-8',
 					success: function(user) {
-						if(user.result === true)
+						if(user.result === true) //Username exists already
 						{
 							callback(user.result);
 						}
-						else
+						else //Create new user on dB and create folder for new user's music
 						{
 							register.prototype.addUser(document.forms['registration'], function(result) {
 								callback(result);
@@ -56,6 +55,7 @@ define(function () {
 				});
     		});
     	},
+
     	addUser: function(registration, callback) {
     		require(['jquery'], function($) {
 				var regElements = registration.elements;

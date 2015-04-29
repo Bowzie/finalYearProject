@@ -21,33 +21,35 @@ define(function () {
                 }
                 
                 var j = 0;
-                var step = 4;
-                if(inputData.length > 1024 && inputData.length <= 2048)
+                var step = 8; //Step size for when recording audio
+                if(inputData.length > 1024 && inputData.length <= 2048) //Step size smaller for audio when it's being played
                 {
                     step = 16;
                 }
-                else if(inputData.length > 2048)
+                else if(inputData.length > 2048) //Step size for larger audio (not when playing or recording)
                 {
-                    step = 32;
+                    step = 32; 
                 }
+
                 for(var i = 0; i < inputData.length; i+=step)
                 {
-                    if(type === 'normal')
+                    if(type === 'normal') //Bring data values up by one so within 0-2 range (d3 has issues with negative numbers)
                     {
                         data[j] = inputData[i] + 1;      
                     }
                     else {
-                        data[j] = inputData[i] * 125;
+                        data[j] = inputData[i] * 125; //Amp spectrum data so it is better visible
                     }
                     j++;  
                 }
 
+                //Create scaling factors
                 var x = d3.scale.linear().domain([0, data.length]).range([0, w]);                
                 var y = d3.scale.linear().domain([0, 2]).range([h, 0]);
 
-                // create a line function that can convert data[] into x and y points
+                //Create a line function that can convert data[] into x and y points
                 var line = d3.svg.line()
-                    // assign the X function to plot our line as we wish
+                    //Assign the X function to plot our line as we wish
                     .x(function(d,i) { 
                         return x(i); 
                     })
@@ -65,12 +67,12 @@ define(function () {
                     
                     //Add svg to graph
                     var graph = d3.select('#' + id).append("svg:svg")
-                          .attr("width", w + m[1] + m[3])
-                          .attr("height", h + m[0] + m[2])
-                          .append("svg:g")
+                          .attr("width", w + m[1] + m[3]) //Width + left/right margins
+                          .attr("height", h + m[0] + m[2])  //Height + top/bottom margins
+                          .append("svg:g") //Append graphic
                           .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
-                    // create xAxis
+                    //Create xAxis
                     var xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(true);
                     
                     //Append xAxis graphic
@@ -79,7 +81,7 @@ define(function () {
                           .attr("transform", "translate(0," + h + ")")
                           .call(xAxis);
                     
-                    //Draw data on graph
+                    //Draw data on graph svg graphic
                     graph.append("svg:path").attr("d", line(data));
             });
         },
@@ -120,8 +122,10 @@ define(function () {
                     div.innerHTML = "";    
                 }
 
+                //Manually add margin
                 div.style.marginTop = "50px";
 
+                //Create scales
                 var x = d3.scale.linear()
                     .domain([0, 1])
                      .range([0, 2]);
@@ -130,19 +134,23 @@ define(function () {
                     .domain([0, data.length])
                     .rangeRound([0, h]);
 
+                //Define colour range
                 var color = d3.scale.linear()
                     .domain([h, 0])
                     .range(["#0ca3d2", "steelblue"]);
 
+                //Define amplitude of rectangle height
                 var amplitude = d3.scale.linear()
                     .domain([0,d3.max(data)])
                     .range([0, h]);
 
+                //Create chart graphic
                 var chart = d3.select('#' + id).append("svg")
                     .attr("class", "chart")
                     .attr("width", w)
                     .attr("height", h);
 
+                //Append bars for each data element
                 chart.selectAll("rect")
                     .data(data)
                     .enter().append("rect")
@@ -152,6 +160,7 @@ define(function () {
                     .attr("width", 2)
                     .attr("height", function(d) { return amplitude(d); } );
 
+                //Border around chart
                 // var borderPath = chart.append("rect")
                 //   .attr("x", 75)
                 //   .attr("y", 0)

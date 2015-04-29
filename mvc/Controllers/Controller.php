@@ -6,10 +6,20 @@ class Controller
 {
 	function __construct() //Empty Constructor
 	{
-		$this->$view = new RenderView();
+		
 	}
 
 	public function GET($args)
+	{
+		return '405 Method Not Allowed'; //Need to change to header?
+	}
+
+	public function PUT($args)
+	{
+		return '405 Method Not Allowed'; //Need to change to header?
+	}
+
+	public function DELETE($args)
 	{
 		return '405 Method Not Allowed'; //Need to change to header?
 	}

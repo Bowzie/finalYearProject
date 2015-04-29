@@ -184,10 +184,12 @@ define([
 	{
 		sampleCloud.musicPanel = new musicPanel();
 		h1.innerText = 'SELECT AUDIO SOURCE';
+
 		if(document.getElementById('top').style.display === "none") //Display top panel if it is invisible
 		{
 			document.getElementById('top').style.display = "block";
 		}
+
 		sampleCloud.musicPanel.loadMusicPanel(mainDiv, function (response) {
 			handleMusicPanel(user);
 		});
@@ -204,6 +206,7 @@ define([
 			evt.stopPropagation();
 			loadCloud(user);
 		}, false);
+
 		uploadButton.addEventListener('click', loadUpload, false);
 		recorderButton.addEventListener('click', loadRecorder, false);
 	}
@@ -249,6 +252,7 @@ define([
 					});
 
 					previewButton.addEventListener('click', function(evt) { //Load preview (chart, play and stop)
+
 						evt.stopPropagation(); //Prevents further propagation of the current event
 						evt.preventDefault();  //Prevents default action occuring for event occurence
 
@@ -257,19 +261,23 @@ define([
 
 						if(currentTrack !== selectedTrack)
 						{
+							//Generate JSON object to send to PHP Controller
 							var trackDetails = {
 			    				userId: user.id,
 			    				username: user.username,
 			    				trackname: selectedTrack 
 							}
 
+							//Get track and decode
 							sampleCloud.audioServer.getTrackPath(trackDetails, function(trackPath) {
 								sampleCloud.audioServer.getTrack(trackPath.trackPath, function(track) {
 									sampleCloud.audioContext.decodeAudioData(track, function(buffer){
+
 										currentTrack = selectedTrack;
-										prev.style.display = 'block';
-										sampleCloud.charting.lineChart('cloudChart', buffer, 'normal');
+										prev.style.display = 'block'; //Show preview panel
+										sampleCloud.charting.lineChart('cloudChart', buffer, 'normal'); //Draw chart
 										currentBuffer = buffer;
+
 									},function(e){"Error with decoding audio data" + e.err});
 								});
 							});
@@ -294,16 +302,18 @@ define([
 							}
 
 							sampleCloud.audioServer.getTrackPath(trackDetails, function(result) {
-
+								//Split path to retrieve trackname(with it's extension type - wav or mp3)
 								var path = result.trackPath.split("/");
 								var trackPath = path[path.length-1];
 
+								//Generate JSON object to send to PHP Controller
 								var userDetails = {
 									userId: sampleCloud.user.id,
 									title: trackSel,
 									path: trackPath
 								}
 
+								//Generate JSON object to send to PHP Controller
 								var delTrackDetails = {
 									username: user.username,
 									path: trackPath
@@ -318,7 +328,7 @@ define([
 											if(musicList[i].value === trackSel)
 											{
 												musicList.removeChild(musicList[i]);
-												if(musicList.length == 0) 
+												if(musicList.length == 0) //If no tracks on cloud, return to music panel
 												{
 													loadMusicPanel(user);
 												}
@@ -333,6 +343,7 @@ define([
 					});
 
 					playButton.addEventListener('click', function(evt) { //Play audio
+
 						evt.stopPropagation(); //Prevents further propagation of the current event
 						evt.preventDefault();  //Prevents default action occuring for event occurence#
 
@@ -341,6 +352,7 @@ define([
 					});
 
 					stopButton.addEventListener('click', function(evt) { //Stop audio
+
 						evt.stopPropagation(); //Prevents further propagation of the current event
 						evt.preventDefault();  //Prevents default action occuring for event occurence
 
@@ -351,22 +363,28 @@ define([
 
 						evt.stopPropagation(); //Prevents further propagation of the current event
 						evt.preventDefault();  //Prevents default action occuring for event occurence
+
 						stopAudio();
 						sampleCloud.audioServer.removeAudioServer(document.getElementById('cloudList'));
-						if(currentTrack !== null && currentBuffer !== null) //If already previewed, load into main panel
+
+						if(currentTrack !== null && currentBuffer !== null) //If chart already previewed, load into main panel
 						{
 							var chartDiv = document.getElementById('cloudChart');
 							loadMainPanel(currentBuffer, chartDiv);
 						}
-						else //Not previewed, fetch track and load into main panel
+						else //Chart not previewed, fetch track and load into main panel
 						{
+
 							selectedTrack = select.value;
+
+							//Generate JSON object to send to PHP Controller
 							var trackDetails = {
 			    				userId: user.id,
 			    				username: user.username,
 			    				trackname: selectedTrack 
 							}
 
+							//Get track and decode
 							sampleCloud.audioServer.getTrackPath(trackDetails, function(trackPath) {
 								sampleCloud.audioServer.getTrack(trackPath.trackPath, function(track) {
 									sampleCloud.audioContext.decodeAudioData(track, function(buffer){
@@ -376,7 +394,8 @@ define([
 							});
 						}
 					}, false);
-
+					
+					//Fill music list with each track user has on server
 					var musicList = document.getElementById('musicList');
 					music.forEach(function(track) {
 						var option = document.createElement('option');
@@ -390,8 +409,11 @@ define([
 	}
 
 	function loadUpload() { //Load upload panel
+
 		h1.innerText = 'UPLOAD';
 		sampleCloud.fileSelection = new fileSelection();
+
+		//Load file selection area
 		sampleCloud.fileSelection.loadFileSelection(mainDiv, function() {
 
 			var fileChooser = document.getElementById('fileChooser');
@@ -433,6 +455,7 @@ define([
 		 	}, false);	
 
 		 	fileDropArea.addEventListener('dragover', function(evt) {
+
 		 		evt.stopPropagation(); //Prevents further propagation of the current event
 				evt.preventDefault();  //Prevents default action occuring for event occurence
 
@@ -441,6 +464,7 @@ define([
 		 	, false);
 
 		 	fileDropArea.addEventListener('drop', function(evt) {
+
 		 		evt.stopPropagation(); //Prevents further propagation of the current event
 				evt.preventDefault();  //Prevents default action occuring for event occurence
 
@@ -470,11 +494,17 @@ define([
 
 				});	
 		 	}, false);	
-
+			
+			//Load audioBuffer
 		 	loadButton.addEventListener('click', function(evt) {
+
 		 		stopAudio();
 		 		var buffer = sampleCloud.fileSelection.getAudioBuffer();
-		 		loadMainPanel(buffer, null);
+
+		 		if(buffer != null)
+		 		{
+		 			loadMainPanel(buffer, null);	
+		 		}
 		 	});
 		});
 	}
@@ -522,24 +552,30 @@ define([
 				evt.stopPropagation(); //Prevents further propagation of the current event
 				evt.preventDefault();  //Prevents default action occuring for event occurence		
 				recorderSpan.innerText = '';
+
 				sampleCloud.recorder.startRecord(function(isRecording) {
+
 					recorderSpan.innerText = '';
-					if(isRecording === true) {
+					if(isRecording === true) { //Disable buttons
 						playButton.disabled = true;
 						startRecorder.disabled = true;
 						loadButton.disabled = true;
 						stopRecorder.disabled = false;
 					}
 					else {
+
 						playButton.disabled = true;
 						startRecorder.disabled = true;
 						loadButton.disabled = true;
 						stopRecorder.disabled = false;
+
 						//Read in from audio inputa and add to recording 
 					    sampleCloud.recorder.getJavaScriptNode().onaudioprocess = function (e) {
-					    	sampleCloud.recorder.addToRecordingBuffer(e.inputBuffer);
+
+					    	sampleCloud.recorder.addToRecordingBuffer(e.inputBuffer); //Decode 1024 bytes of buffer
 					    	sampleCloud.charting.lineChart('recorderChart', e.inputBuffer, 'normal');
-					    	if(sampleCloud.recorder.getRecording().length >= maxTime)
+
+					    	if(sampleCloud.recorder.getRecording().length >= maxTime) //Time 20 seconds or over
 					    	{
 					    		recorderSpan.innerText = 'REACHED TIME LIMIT!';
 						    	stopRecorder.click();
@@ -550,7 +586,8 @@ define([
 			}, false); //Start recording when button pressed
 
 			var recorderChart = null;
-			stopRecorder.addEventListener('click', function(evt) {
+			stopRecorder.addEventListener('click', function(evt) { //Stop recording
+
 				evt.stopPropagation(); //Prevents further propagation of the current event
 				evt.preventDefault();  //Prevents default action occuring for event occurence
 
@@ -565,19 +602,24 @@ define([
 				document.getElementById('recorderChart').innerHTML = "";
 				document.getElementById('recorderChart').appendChild(elem);
 
-				sampleCloud.charting.lineChart('recorderChart', sampleCloud.recorder.getAudioBuffer().getChannelData(0), 'normal');
+				sampleCloud.charting.lineChart('recorderChart', sampleCloud.recorder.getAudioBuffer().getChannelData(0), 'normal'); //Draw recording on chart
 				recorderChart = document.getElementById('recorderChart');
+
 			}, false); //Start recording when button pressed
 
-			playButton.addEventListener('click', function(evt) {
+			playButton.addEventListener('click', function(evt) { //Play audio
+
 				evt.stopPropagation(); //Prevents further propagation of the current event
 				evt.preventDefault();  //Prevents default action occuring for event occurence
+
 				recorderSpan.innerText = '';
 				playButton.disabled = true;
+
 				playAudio(sampleCloud.recorder.getAudioBuffer(), 1, 'recorderChart', playButton);
 			}, false); //Start recording when button pressed	
 
-			stopButton.addEventListener('click', function(evt) {
+			stopButton.addEventListener('click', function(evt) { //Stop playing audio
+
 				evt.stopPropagation(); //Prevents further propagation of the current event
 				evt.preventDefault();  //Prevents default action occuring for event occurence
 
@@ -587,7 +629,8 @@ define([
 
 			}, false); //Start recording when button pressed	
 
-			loadButton.addEventListener('click', function(evt) {
+			loadButton.addEventListener('click', function(evt) { //Stop audio and load audio buffer into main panel
+
 				evt.stopPropagation(); //Prevents further propagation of the current event
 				evt.preventDefault();  //Prevents default action occuring for event occurence
 
@@ -608,13 +651,17 @@ define([
 		sampleCloud.audioServer = new audioServer();
 		sampleCloud.dsp = new dspFunctions();
 		sampleCloud.dspPanel = new dspPanel();
+		sampleCloud.initialBuffer = buffer; //Globally store buffer
+
+		//Load main panel html
 		sampleCloud.mainPanel.loadMainPanel(mainDiv, function() {
-			sampleCloud.initialBuffer = buffer;
-			if(chartDiv !== null)
+
+
+			if(chartDiv !== null) //Chart already drawn
 			{
 				document.getElementById('mainChart').appendChild(chartDiv);
 			}
-			else
+			else //Chart not previously drawn
 			{
 				sampleCloud.charting.lineChart('mainChart', buffer, 'normal');
 			}
@@ -671,7 +718,8 @@ define([
 			mainSaveSpan.style.display = 'none';
 			mainSaveSpan.innerText = '';
 
-			viewSelect.addEventListener('change', function(evt) {
+			viewSelect.addEventListener('change', function(evt) { //Change chart view
+
 				evt.stopPropagation(); //Prevents further propagation of the current event
 				evt.preventDefault();  //Prevents default action occuring for event occurence
 				var currentBuffer;
@@ -687,6 +735,7 @@ define([
 					currentSpectrum = rightSpectrum;
 				}
 
+				//Draw chart depending on whether buffer(line) or spectrum(line or bar)
 				switch(viewSelect.value) {
 					case 'normal':
 						sampleCloud.charting.lineChart('mainChart', currentBuffer, 'normal');
@@ -720,10 +769,11 @@ define([
 				}
 			}, false);
 
-			channelSelect.addEventListener('change', function(evt) { 
+			channelSelect.addEventListener('change', function(evt) { //Change selected channel and redraw chart
 				evt.preventDefault();
 				evt.stopPropagation();
 
+				//Draw line chart for selected channel
 				if(channelSelect.value === '1')
 				{
 					chosenChannel = 1;
@@ -733,24 +783,29 @@ define([
 					chosenChannel = 2;
 					sampleCloud.charting.lineChart('mainChart', rightChannel, 'normal');
 				}
+
+				viewSelect.value = 'normal'; //Reset view select to normal view
 			});
 
-			dspSelect.addEventListener('change', function(evt) {
+			dspSelect.addEventListener('change', function(evt) { //Redraw dsp panel inputs for selected filter/effect
+
 				evt.stopPropagation(); //Prevents further propagation of the current event
 				evt.preventDefault();  //Prevents default action occuring for event occurence
 
 				sampleCloud.dspPanel.handleSelectChange(sampleCloud.audioContext.sampleRate);
 			}, false);
 
-			applyDspButton.addEventListener('click', function(evt) {
+			applyDspButton.addEventListener('click', function(evt) { //Apply button pressed, apply effect/filter to buffer
+
 				evt.stopPropagation(); //Prevents further propagation of the current event
 				evt.preventDefault();  //Prevents default action occuring for event occurence
 
 				applyDspButton.disabled = true;
 
-				sampleCloud.dspPanel.handleDspApply(leftChannel, sampleCloud.audioContext.sampleRate, function(newBuffer) {
-					if(newBuffer !== null){
-							sampleCloud.dsp.fft(newBuffer, sampleCloud.audioContext.samplerate, function(fft) {
+				sampleCloud.dspPanel.handleDspApply(leftChannel, sampleCloud.audioContext.sampleRate, function(newBuffer) { //Apply filter/effect to signal
+
+					if(newBuffer !== null) { //Left Channel
+							sampleCloud.dsp.fft(newBuffer, sampleCloud.audioContext.samplerate, function(fft) { //Perform FFT
 							leftChannel = newBuffer;
 							if(chosenChannel == 1)
 							{
@@ -765,11 +820,11 @@ define([
 					}
 				});
 
-				if(numChannels === 2)
+				if(numChannels === 2) //Right Channel
 				{
-					sampleCloud.dspPanel.handleDspApply(rightChannel, sampleCloud.audioContext.sampleRate, function(newBuffer) {
+					sampleCloud.dspPanel.handleDspApply(rightChannel, sampleCloud.audioContext.sampleRate, function(newBuffer) { 
 						if(newBuffer !== null){
-								sampleCloud.dsp.fft(newBuffer, sampleCloud.audioContext.samplerate, function(fft) {
+								sampleCloud.dsp.fft(newBuffer, sampleCloud.audioContext.samplerate, function(fft) { //Perform FFT
 								rightChannel = newBuffer;
 								if(chosenChannel == 2)
 								{
@@ -787,16 +842,19 @@ define([
 			}, false); //Start recording when button pressed
 
 
-			playButton.addEventListener('click', function(evt) {
+			playButton.addEventListener('click', function(evt) { //Play audio
+
 				evt.stopPropagation(); //Prevents further propagation of the current event
 				evt.preventDefault();  //Prevents default action occuring for event occurence
 
-				viewSelect.value = 'normal';
+				viewSelect.value = 'normal'; //Reset view select to normal view
 				playButton.disabled = true;
-				playAudio({left: leftChannel, right: rightChannel}, chosenChannel, 'mainChart', playButton);				
+				playAudio({left: leftChannel, right: rightChannel}, chosenChannel, 'mainChart', playButton);	
+
 			}, false); //Start recording when button pressed	
 
-			stopButton.addEventListener('click', function(evt) {
+			stopButton.addEventListener('click', function(evt) { //Stop playing audio
+
 				evt.stopPropagation(); //Prevents further propagation of the current event
 				evt.preventDefault();  //Prevents default action occuring for event occurence
 
@@ -804,7 +862,8 @@ define([
 				stopAudio(playButton);
 			}, false);
 
-			resetButton.addEventListener('click', function(evt) {
+			resetButton.addEventListener('click', function(evt) { //Reset channels to original buffer data (Slightly buggy, depending on whether samplecloud.initial buffer has been cleaned up by garbage collector)
+
 				evt.stopPropagation(); //Prevents further propagation of the current event
 				evt.preventDefault();  //Prevents default action occuring for event occurence
 
@@ -814,12 +873,14 @@ define([
 					rightChannel = sampleCloud.initialBuffer.getChannelData(1);
 				}
 
+				//Draw left channel on chart and switch channel select
 				sampleCloud.charting.lineChart('mainChart', leftChannel, 'normal');
-				channelSelect.value = '1';
+				channelSelect.value = '1'; 
 
 			}, false);
 
-			saveForm.addEventListener('submit', function(evt) {
+			saveForm.addEventListener('submit', function(evt) { //Save track
+
 				evt.preventDefault();
 				evt.stopPropagation();
 
@@ -830,9 +891,10 @@ define([
 				var download = saveForm['download'].checked;
 
 				//Check for overwrite
-				sampleCloud.audioServer.checkTrackName(sampleCloud.user.id, trackname, function(response) {
-					if(format === 'WAV' && selectedNumChannels > numChannels)
+				sampleCloud.audioServer.checkTrackName(sampleCloud.user.id, trackname, function(response) { //Get track name
+					if(format === 'WAV' && selectedNumChannels > numChannels) //Cannot write 1 channel audio as 2 for WAV
 					{	
+						//Display message 
 						mainSaveSpan.style.display = 'block';
 						mainSaveSpan.innerText = "Cannot encode wav 2 channels when audio is only 1!";
 					}
@@ -843,10 +905,11 @@ define([
 						{
 							saveAudio('new', null, trackname, selectedNumChannels, format, download, leftChannel, rightChannel, numChannels);
 						}
-						else {
+						else { //File with same name stored already
 							var confirm = window.confirm("Overwrite " + trackname + "?");
-							if(confirm === true) //Overwrite file with same name
+							if(confirm === true) //Overwrite file with same name on confirmation
 							{
+								//Generate JSON object to send to PHP Controller
 								var trackDetails = {
 				    				userId: sampleCloud.user.id,
 				    				username: sampleCloud.user.username,
@@ -867,21 +930,22 @@ define([
 		});
 	}
 
-	function playAudio(buffer, chosenChannel, chartDiv, div)
+	function playAudio(buffer, chosenChannel, chartDiv, div) //Play audio
 	{	
 
 		var audioBuffer;
-		if(buffer instanceof AudioBuffer)
+		if(buffer instanceof AudioBuffer) //1 channel passed in
 		{
 			audioBuffer = buffer;
 		}
-		else { //create audio buffer
+		else { //create audio buffer audio has 2 channels
 			var channels = 1;
 			if(buffer.right != null)
 			{
 				channels = 2;
 			}
 			audioBuffer = sampleCloud.audioContext.createBuffer( channels, buffer.left.length, sampleCloud.audioContext.sampleRate); //Create buffer
+
        		audioBuffer.getChannelData(0).set(buffer.left, 0);	//Set channel data to left
        		if(channels === 2)
        		{
@@ -895,65 +959,70 @@ define([
 		sampleCloud.newSource.connect(sampleCloud.audioContext.destination); //Connect to output (speakers)
 
 		//Connect a javascript node so that we can draw chart when audio is being played
-		var javascriptNode = sampleCloud.audioContext.createScriptProcessor(2048, 1, 1); //16384 buffer size = high quality
-		javascriptNode.connect(sampleCloud.audioContext.destination);
+		var javascriptNode = sampleCloud.audioContext.createScriptProcessor(2048, 1, 1); //2048 buffer size(must be power of 2)
+		javascriptNode.connect(sampleCloud.audioContext.destination); //Connect to output
 		
-
+		//Create temp buffer data to draw
 		var j = 0;
 		tempChannelData = sampleCloud.newSource.buffer.getChannelData(chosenChannel-1);
 		var tempBuff = [];
 		var length = tempChannelData.length;
 		
-	   	javascriptNode.onaudioprocess = function (e) {
+	   	javascriptNode.onaudioprocess = function (e) { //When audio is being processed (playing in this case)
 	   		if(sampleCloud.newSource !== null)
 	   		{
 		   		if(j < length - 2048) //Don't draw last frame
 		   		{
-			   		tempBuff = tempChannelData.subarray(j, j+2048);
+			   		tempBuff = tempChannelData.subarray(j, j+2048); //Get selected 2048 bytes from temp buffer
 					j += 2048;	
-			    	sampleCloud.charting.lineChart(chartDiv, tempBuff, 'normal');	
+			    	sampleCloud.charting.lineChart(chartDiv, tempBuff, 'normal');	//Draw 2045 bytes
 		   		}	
 	   		}
 	    }	
 
-	    sampleCloud.newSource.onended = function()
+	    sampleCloud.newSource.onended = function() //Audio has stopped playing
 	    {
 	    	//Loading gif add
 	    	sampleCloud.charting.lineChart(chartDiv, tempChannelData, 'normal');
 	    	sampleCloud.newSource = null;
 
-	    	if(div != null)
+	    	if(div != null) //Div potentially passed in (play button)
 	    	{
-	    		div.disabled = false;
+	    		div.disabled = false; //Allowed to be pressed
 	    	}
 	    	
 	    }
 
-	    sampleCloud.newSource.start(0); //plays the contents of the wav
+	    sampleCloud.newSource.start(0); //plays the contents of the buffer
 	}
 
-	function stopAudio(div)
+	function stopAudio(div) //Stops audio playing, div passed in (play button) set to not disabled
 	{
-		if(sampleCloud.newSource !== null)
+		if(sampleCloud.newSource !== null) //Check if audio is actually playing
 		{
-			sampleCloud.newSource.stop();	
+			sampleCloud.newSource.stop();	//Stop audio
 			sampleCloud.newSource = null;
-			if(div != null)
+
+			if(div != null) //Div potentially passed in (play button)
+
 			{
-				div.disabled = false;
+				div.disabled = false; //Allowed to be pressed
 			}
 		}
 	}
 
-	function saveAudio(type, prevTrackPath, trackname, channels, format, download, leftChannel, rightChannel, numChannels) 
+	function saveAudio(type, prevTrackPath, trackname, channels, format, download, leftChannel, rightChannel, numChannels) //Save audio on cloud and optionally to local file system of user
 	{
 		var mainSaveSpan = document.getElementById('mainSaveUploadSpan');
+
 		mainSaveSpan.style.display = 'block';
 		mainSaveSpan.innerText = 'Saving ' + trackname + '...';
-		if(format === 'WAV')
+
+		if(format === 'WAV') //Check format
 		{
-			sampleCloud.audioEncode.wavEncode(leftChannel, rightChannel, numChannels, channels, sampleCloud.audioContext.sampleRate , function(blob) {
-				if(download === true)
+			sampleCloud.audioEncode.wavEncode(leftChannel, rightChannel, numChannels, channels, sampleCloud.audioContext.sampleRate , function(blob) { //Encode WAV
+				
+				if(download === true) //Checkbox ticked 
 				{
 			    	//Create download 
 			       	var URL = window.URL || window.webkitURL;
@@ -965,19 +1034,22 @@ define([
 				    a.click(); 	
 				}
 
+				//Generate JSON object to send to PHP Controller
 				var userDetails = {
 					userId: sampleCloud.user.id,
 					title: trackname,
 					path: trackname + '.wav'
 				}
 
-				if(type === 'update')
+				if(type === 'update') //Overwrite track
 				{
+					//Generate JSON object to send to PHP Controller
 					var trackDetails = {
 						username: sampleCloud.user.username,
 						path: prevTrackPath
-					}
+					}	
 
+					//Delete track with same name on server/db and add new track
 					sampleCloud.audioServer.deleteDbEntry(userDetails, function() {
 						sampleCloud.audioServer.deleteTrack(trackDetails, function() {
 							sampleCloud.audioServer.addDbEntry(userDetails, function() {
@@ -991,6 +1063,7 @@ define([
 
 				}
 				else {
+					//New entry on dB and server
 					sampleCloud.audioServer.addDbEntry(userDetails, function() {
 						sampleCloud.audioServer.addTrack(blob, userDetails.path, sampleCloud.user.username, function(response) {
 							mainSaveSpan.style.display = 'block';
@@ -1000,12 +1073,14 @@ define([
 				}
 			});
 		}
-		else{
+		else{ //MP3
+			//Check selected bitrate
 			var bitrate = format === 'MP3_128' ? 128
 				: format === 'MP3_192' ? 192
 				: format === 'MP3_320' ? 320
 				: 128;
 
+			//Encode MP3
 			sampleCloud.audioEncode.mp3Encode(leftChannel, rightChannel, numChannels, 1, channels, sampleCloud.audioContext.sampleRate, bitrate, leftChannel.length, function(blob) {
 				if(download === true)
 				{
@@ -1019,18 +1094,22 @@ define([
 				   	a.click(); 
 			   	}
 
+			   	//Generate JSON object to send to PHP Controller
 			   	var userDetails = {
 					userId: sampleCloud.user.id,
 					title: trackname,
 					path: trackname + '.mp3'
 				}
 
-				if(type === 'update')
+				if(type === 'update') //overwrite
 				{
+					//Generate JSON object to send to PHP Controller
 					var trackDetails = {
 						username: sampleCloud.user.username,
 						path: prevTrackPath
 					}
+
+					//Delete track with same name on server/db and add new track
 					sampleCloud.audioServer.deleteDbEntry(userDetails, function() {
 						sampleCloud.audioServer.deleteTrack(trackDetails, function() {
 							sampleCloud.audioServer.addDbEntry(userDetails, function() {
@@ -1043,7 +1122,8 @@ define([
 					});
 
 				}
-				else {
+				else { 
+					//New entry on dB and server
 					sampleCloud.audioServer.addDbEntry(userDetails, function() {
 						sampleCloud.audioServer.addTrack(blob, userDetails.path, sampleCloud.user.username, function() {
 							mainSaveSpan.style.display = 'block';

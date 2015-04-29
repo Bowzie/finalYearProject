@@ -7,6 +7,7 @@ define(function () {
     dspPanel.prototype = {
 
     	handleSelectChange: function(samplerate) {
+    		//Document Elements
     		var dspPanel =  document.getElementById('dspPanel');
 			var biquadSelect1 = document.getElementById('biquadSelect1');
 			var biquadSelect2 = document.getElementById('biquadSelect2');
@@ -30,6 +31,8 @@ define(function () {
 			var dspSpan = document.getElementById('dspSpan');
 
 			var sampleRateHalf = samplerate/2;
+
+			//Set display for each Document element
 			applyDsp.style.display = 'block';
 			biquadSelect1.style.display = 'none';
 			biquadSelect2.style.display = 'none';
@@ -263,7 +266,8 @@ define(function () {
     	},
 
     	handleDspApply: function(buffer, samplerate, callback) {
-    		require(['dspFunctions'], function(dsp) {
+
+    		require(['dspFunctions'], function(dsp) { //perform selected dsp filter/effect on buffer
     			var dsp = new dsp();
 				var dspPanel =  document.getElementById('dspPanel');
 				var biquadSelect1 = document.getElementById('biquadSelect1');
@@ -309,6 +313,7 @@ define(function () {
 						values.cutoff = parseFloat(rangeInput2.value);
 
 						dspSpan.style.display = 'none';
+						//Ensure filter has been chosen
 						if(values.filt === 'LPF' || values.filt === 'HPF')
 						{
 							dsp.biquad1(buffer, values.filt, samplerate, values.res, values.cutoff, function(biquad1Buff) {
@@ -341,6 +346,7 @@ define(function () {
 						values.q = parseFloat(rangeInput3.value);
 
 						dspSpan.style.display = 'none';
+						//Ensure filter has been chosen
 						if(values.filt === 'LPF' || values.filt === 'HPF' || values.filt === 'BPF'|| values.filt === 'NOTCH' || values.filt === 'PEAK' || values.filt === 'LSH' || values.filt === 'HSH')
 						{
 							dsp.biquad3(buffer, values.filt, values.gain, values.cutoff, values.q, function(biquad3Buff) {
@@ -352,6 +358,7 @@ define(function () {
 							dspSpan.innerText = "Select a filter!";
 							callback(null);
 						}
+
 					break;
 					//Bit Crusher - 2 inputs
 					case '5':
@@ -367,6 +374,7 @@ define(function () {
 					case '6':
 						values.rate = parseFloat(rangeInput1.value); 
 						values.bits = parseFloat(rangeInput2.value);
+
 						dsp.decimator(buffer, values.rate, values.bits, function(decimatorBuff) {
 							callback(decimatorBuff);
 						});
@@ -375,6 +383,7 @@ define(function () {
 					case '7':
 						values.amount = parseFloat(rangeInput1.value); 
 						values.decay = parseFloat(rangeInput2.value);
+
 						dsp.delay1(buffer, samplerate, values.amount, values.decay, function(delay1Buff) {
 							callback(delay1Buff);
 						});
@@ -383,6 +392,7 @@ define(function () {
 					case '8':
 						values.masterVol = parseFloat(rangeInput1.value); 
 						values.delayVol = parseFloat(rangeInput2.value);
+
 						dsp.delay2(buffer, samplerate, values.masterVol, values.delayVol, function(delay2Buff) {
 							callback(delay2Buff);
 						});
@@ -390,6 +400,7 @@ define(function () {
 					//Distortion - 1 input
 					case '9':
 						values.distAmount = parseFloat(rangeInput1.value); 
+
 						dsp.distortion(buffer, values.distAmount, function(distortionBuff) {
 							callback(distortionBuff);
 						});
@@ -397,6 +408,7 @@ define(function () {
 					//Distortion Foldback - 1 input
 					case '10':
 						values.threshold = parseFloat(rangeInput1.value); 
+
 						dsp.foldbackDistortion(buffer, values.threshold, function(foldbackDistortionBuff) {
 							callback(foldbackDistortionBuff);
 						});
@@ -406,6 +418,7 @@ define(function () {
 						values.delayTime = parseFloat(rangeInput1.value); 
 						values.rate = parseFloat(rangeInput2.value);
 						values.amp = parseFloat(rangeInput3.value);
+
 						dsp.flanger(buffer, samplerate, values.delayTime, values.rate, values.amp, function(flangerBuff) {
 							callback(flangerBuff);
 						});	
@@ -413,6 +426,7 @@ define(function () {
 					//Fuzz - 1 input
 					case '12':
 						values.gain = parseFloat(rangeInput1.value) * 10;
+
 						dsp.fuzz(buffer, values.gain, 0, function(fuzzBuff) {
 							callback(fuzzBuff);
 						}); 
@@ -420,6 +434,7 @@ define(function () {
 					//Gain - 1 input
 					case '13':
 						values.gain = parseFloat(rangeInput1.value) * 10; 
+
 						dsp.gain(buffer, values.gain, function(gainBuff) {
 							callback(gainBuff);
 						});
@@ -429,6 +444,7 @@ define(function () {
 						values.threshold = parseFloat(rangeInput1.value); 
 						values.rt = parseFloat(rangeInput2.value)/1000;
 						values.at = parseFloat(rangeInput3.value)/1000;
+
 						dsp.limiter(buffer, values.threshold, values.rt, values.at, function(limiterBuff) {
 							callback(limiterBuff);
 						}); 
@@ -454,7 +470,9 @@ define(function () {
 						values.maxf = parseFloat(rangeInput2.value);
 						values.fw = parseFloat(rangeInput3.value);
 						values.damp = parseFloat(rangeInput4.value);
+
 						dspSpan.style.display = 'none';
+						//Ensure min frequency is lower than max frequency
 						if(values.minf < values.maxf)
 						{
 							dsp.wahwah(buffer, samplerate, values.minf, values.maxf, values.fw, values.damp, function(wahBuff) {

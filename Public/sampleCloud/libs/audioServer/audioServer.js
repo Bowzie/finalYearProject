@@ -3,7 +3,7 @@ define(function () {
     function AudioServer() {
 
     }
-
+    
     AudioServer.prototype = {
     	audioBuffer: null,
 
@@ -77,8 +77,10 @@ define(function () {
 				});
     		});
     	},
+
     	getTrackPath: function(trackDetails, callback) {
     		require(['jquery'], function() {
+    			
     			var track = {
     				functionName: 'getTrackPath',
     				_userId: trackDetails.userId,
@@ -100,9 +102,11 @@ define(function () {
 				});
     		});
     	},
+
     	getTrack: function(trackPath, callback) {
-    		//Not using ajax as arraybuffer is desired response type 
+    		//Not using jquery.ajax as arraybuffer is desired response type 
 			var xmlHttpGet = new XMLHttpRequest();
+
 			xmlHttpGet.open("Get", trackPath, true); 
 			xmlHttpGet.responseType = "arraybuffer"; //arraybuffer = raw binary data
 
@@ -112,6 +116,7 @@ define(function () {
 
 			xmlHttpGet.send();
     	},
+
     	addTrack: function(blob, trackname, username, callback) {
     		require(['jquery'], function() {
     			var formData = new FormData();
@@ -135,8 +140,10 @@ define(function () {
     			});
     		});	
     	},
+
     	deleteTrack: function(trackDetails, callback) {
     		require(['jquery'], function() {
+
     			var track = {
     				functionName: 'deleteTrack',
     				username: trackDetails.username,
@@ -157,7 +164,8 @@ define(function () {
 				});
     		});
     	},
-    	updateTrack: function (trackDetails, blob, callback)
+
+    	updateTrack: function (trackDetails, blob, callback) //NOT USED
     	{
     		require(['jquery'], function() {
     			AudioServer.prototype.deleteTrack(tracDetails, function() {
@@ -167,6 +175,7 @@ define(function () {
     			});
     		});
     	},
+
     	addDbEntry: function(userDetails, callback) {
     		require(['jquery'], function() {
 
@@ -192,6 +201,7 @@ define(function () {
 
     		});
     	},
+
     	deleteDbEntry: function(userDetails, callback) {
     		require(['jquery'], function() {
     			var deleteDbEntry = {
@@ -219,43 +229,3 @@ define(function () {
 
     return AudioServer;
 });
-
-
-// var fileFromServer = {
-// 	audioBuffer: null,
-// };
-
-// fileFromServer.init = function(trackPath) {
-// 	//Determine if browser used supports web audio api
-// 	try {
-// 	  window.AudioContext = window.AudioContext || window.webkitAudioContext;
-// 	  audioContext = new AudioContext();
-// 	} catch(e) {
-// 	  alert('Web Audio API is not supported in this browser');
-// 	}
-
-// 	//Get file from server only if web audio supported
-// 	if(audioContext !== null)
-// 	{
-// 		fileFromServer.GetFile(trackPath); 
-// 	}
-// }
-
-// fileFromServer.GetFile = function(trackPath) {
-// 	//Get audio track from file and Get as an arraybuffer
-// 	var xmlHttpGet = new XMLHttpRequest();
-// 	xmlHttpGet.open("Get", '/../finalYearProject/music/'+trackPath, true); 
-// 	xmlHttpGet.responseType = "arraybuffer"; //arraybuffer = raw binary data
-
-// 	//Decode audio and set to buffer
-// 	xmlHttpGet.onload = function() {
-// 		var data = xmlHttpGet.response;
-
-// 		audioContext.decodeAudioData(xmlHttpGet.response, function(buffer){
-// 			audioBuffer = buffer;
-// 		},function(e){"Error with decoding audio data" + e.err});
-// 	}
-
-// 	xmlHttpGet.send();
-// };
-

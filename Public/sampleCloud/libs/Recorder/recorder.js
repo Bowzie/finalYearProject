@@ -57,11 +57,10 @@ define(function () {
 		setupAudio: function(stream, audioCtx) 
 		{
 			this.audioContext = audioCtx;
+
 			//Create nodes
 			this.sourceNode = this.audioContext.createMediaStreamSource(stream);
 
-			//TODO Variable buffer size for different qualities
-			//TODO variable channels
 			this.javascriptNode = this.audioContext.createScriptProcessor(1024, 1, 1); //16384 buffer size = high quality
 
 			//Connect nodes together and to output(speakers)
@@ -72,9 +71,9 @@ define(function () {
 		startRecord: function(callback) 
 		{
 
-			if(this.isRecording === true) 
+			if(this.isRecording === true) //Check if recording
 			{
-				console.log('Already recording!'); //TODO make toast?
+				console.log('Already recording!'); 
 				callback(true);
 			}
 			else

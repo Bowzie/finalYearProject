@@ -21,7 +21,7 @@ define(function () {
 			});
 		},
 
-    	validate : function(callback) {
+    	validate : function(callback) { //Check is username/password matches on dB
     		require(['jquery'], function($) {
 
 				var userDetails = {
@@ -41,38 +41,18 @@ define(function () {
 					contentType: 'application/json; charset=UTF-8',
 					success: function(result) {
 						callback(result);
-						// if(user.result === 'Successful')
-						// {
-						// 	loginDiv.style.display = 'none';
-						// 	// document.cookie = 'username=dafg; expires=Thu, 01 Jan 2016 00:00:00 UTC';
-						// 	console.log(user);
-
-						// }
-						// else
-						// {
-						// 	loginDiv.style.display = 'block';
-						// 	console.log('Failure to login');
-						// 	// document.getElementById('loginFailed').innerHTML = 'Login Failed Bro';					loginAttempts++;
-
-						// 	//Prevent brute force of password by only allowing 5 attempts (per username??)
-						// 	if(loginAttempts > 5)
-						// 	{
-						// 		console.log('Lock out here');
-						// 	}
-						// }
 					},
 					error: function() {
 					}
 				});
     		})
     	},
-    	logout: function(main) {
+    	logout: function(main) { //NOT USED
     		// remove all divs in main
     		while (main.firstChild) {
 			  main.removeChild(main.firstChild);
 			}
 			//load login
-
     	}
     	//recover, change password and register should be implemented
     }
